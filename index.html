@@ -782,6 +782,17 @@ sb.auth.onAuthStateChange(async (event, session) => {
   updateNavAuth(currentUser);
 });
 
+// Fallback: if onAuthStateChange doesn't fire, check session manually
+sb.auth.getSession().then(({ data }) => {
+  if (document.getElementById('navAuth').innerHTML === '') {
+    currentUser = data?.session?.user || null;
+    if (currentUser) {
+      sb.from('profiles').select('*').eq('id', currentUser.id).single().then(({ data: p }) => { currentProfile = p; });
+    }
+    updateNavAuth(currentUser);
+  }
+});
+
 // MARKDOWN SIMPLE RENDERER
 function md(text) {
   if (!text) return '';
