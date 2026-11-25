@@ -1,0 +1,926 @@
+<title>SH1NY HUNT3RS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-elevated: #111;
+  --fg: #d4d4d4;
+  --fg-muted: #888;
+  --fg-dim: #444;
+  --red: #e31e24;
+  --red-glow: rgba(227,30,36,0.12);
+  --red-dim: #8b1215;
+  --white: #f0f0f0;
+  --nav-bg: rgba(10,10,10,0.88);
+  --border: #1c1c1c;
+  --border-light: #252525;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f4f4; --bg-elevated: #fff; --fg: #2a2a2a; --fg-muted: #666; --fg-dim: #bbb;
+    --red: #c9191e; --red-glow: rgba(201,25,30,0.07); --red-dim: #e0b0b2; --white: #111;
+    --nav-bg: rgba(244,244,244,0.92); --border: #e0e0e0; --border-light: #eaeaea;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f4f4f4; --bg-elevated: #fff; --fg: #2a2a2a; --fg-muted: #666; --fg-dim: #bbb;
+  --red: #c9191e; --red-glow: rgba(201,25,30,0.07); --red-dim: #e0b0b2; --white: #111;
+  --nav-bg: rgba(244,244,244,0.92); --border: #e0e0e0; --border-light: #eaeaea;
+  color-scheme: light;
+}
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-display);
+  margin: 0; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+*, *::before, *::after { box-sizing: border-box; }
+a { color: var(--red); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--white); }
+img { max-width: 100%; }
+.container { max-width: 1140px; margin: 0 auto; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); display: flex; align-items: center; gap: 0.6em; }
+.eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--red); display: inline-block; }
+.section-title { font-size: clamp(1.8rem,4.5vw,2.8rem); font-weight: 800; color: var(--white); margin: 0.3em 0 0.5em; text-wrap: balance; line-height: 1.15; }
+.section { padding-block: 5rem; }
+.divider { border: none; height: 1px; background: var(--border); margin: 0; }
+
+/* NAV */
+nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 101; background: var(--bg); }
+.nav-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; padding: 0.7rem 0; gap: 1.5rem; }
+.nav-logo-img { height: 32px; width: auto; }
+.nav-links { display: flex; gap: 1.6rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav-links a { font-size: 0.76rem; color: var(--fg-muted); letter-spacing: 0.03em; text-transform: uppercase; font-weight: 600; transition: color 0.2s; cursor: pointer; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-right { display: flex; align-items: center; gap: 0.5rem; margin-left: 0.5rem; }
+.nav-btn { background: none; border: 1px solid var(--border); color: var(--fg-muted); height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: all 0.2s; padding: 0 8px; }
+.nav-btn:hover { border-color: var(--fg-muted); color: var(--white); }
+.lang-btn { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
+.nav-cta { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.45em 1.1em; background: var(--red); color: #fff; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; transition: background 0.2s; cursor: pointer; }
+.nav-cta:hover { background: #ff2a30; color: #fff; }
+.hamburger { display: none; background: none; border: none; color: var(--fg); font-size: 1.3rem; cursor: pointer; padding: 4px; }
+@media (max-width: 800px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1rem max(16px, env(safe-area-inset-left, 0px)); gap: 0.7rem; z-index: 99; }
+  .hamburger { display: block; margin-left: auto; }
+  .nav-right { margin-left: 0; }
+}
+
+/* HERO */
+.hero { margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: calc(env(safe-area-inset-top, 0px) + 5rem); padding-bottom: 0; position: relative; overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; min-height: 60vh; }
+.hero-text { position: relative; z-index: 2; }
+.hero-text .eyebrow { margin-bottom: 1.5rem; }
+.hero-text h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 900; color: var(--white); line-height: 1.05; margin: 0 0 1.5rem; }
+.hero-text h1 em { font-style: normal; color: var(--red); }
+.hero-text p { font-size: 1rem; color: var(--fg-muted); max-width: 440px; margin: 0 0 2rem; line-height: 1.7; }
+.hero-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.btn { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.7em 1.5em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5em; border: none; cursor: pointer; }
+.btn-red { background: var(--red); color: #fff; }
+.btn-red:hover { background: #ff2a30; color: #fff; }
+.btn-outline { border: 1px solid var(--border-light); color: var(--fg-muted); background: none; }
+.btn-outline:hover { border-color: var(--fg-muted); color: var(--white); }
+.hero-terminal { margin-top: -3rem; position: relative; z-index: 3; max-width: 500px; }
+@media (max-width: 800px) {
+  .hero-grid { grid-template-columns: 1fr; min-height: auto; }
+  .hero-terminal { margin-top: 1rem; }
+}
+
+/* TERMINAL */
+.terminal { background: var(--bg); border: 1px solid var(--border-light); border-radius: 6px; font-family: var(--font-mono); font-size: 0.75rem; overflow: hidden; }
+.terminal-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
+.terminal-dot { width: 9px; height: 9px; border-radius: 50%; }
+.terminal-dot.r { background: var(--red); }
+.terminal-dot.y, .terminal-dot.g { background: var(--fg-dim); }
+.terminal-title { margin-left: auto; color: var(--fg-dim); font-size: 0.65rem; }
+.terminal-body { padding: 0.8rem 1rem; line-height: 1.9; }
+.terminal-body .prompt { color: var(--red); }
+.terminal-body .cmd { color: var(--white); }
+.terminal-body .out { color: var(--fg-muted); }
+.cursor { display: inline-block; width: 7px; height: 14px; background: var(--red); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 500px; margin-left: auto; margin-right: auto; gap: 1px; background: var(--border); border-top: 2px solid var(--red-dim); border-bottom: 2px solid var(--red-dim); }
+.stat { background: var(--bg); padding: 2rem 1.2rem; text-align: center; }
+.stat-idx { font-family: var(--font-mono); font-size: 0.58rem; color: var(--fg-dim); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.stat-num { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: var(--white); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg-muted); margin-top: 0.5rem; }
+
+/* GOALS */
+.goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; }
+.goal { padding: 2.5rem 2rem; position: relative; border-right: 1px solid var(--border); }
+.goal:last-child { border-right: none; }
+.goal-num { font-family: var(--font-mono); font-size: 4.5rem; font-weight: 900; color: var(--border); line-height: 1; position: absolute; top: 1rem; right: 1.5rem; pointer-events: none; user-select: none; }
+.goal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.8rem; }
+.goal h3 { font-size: 1.15rem; font-weight: 700; color: var(--white); margin: 0 0 0.6rem; }
+.goal p { font-size: 0.88rem; color: var(--fg-muted); line-height: 1.7; margin: 0 0 1.2rem; }
+.goal-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); display: inline-flex; align-items: center; gap: 0.4em; border: 1px solid var(--border); padding: 0.35em 0.8em; border-radius: 3px; transition: all 0.2s; }
+.goal-link:hover { border-color: var(--fg-muted); color: var(--white); }
+@media (max-width: 800px) {
+  .goals-grid { grid-template-columns: 1fr; }
+  .goal { border-right: none; border-bottom: 1px solid var(--border); }
+  .goal:last-child { border-bottom: none; }
+}
+
+/* DOMAINS */
+.domains { margin-top: 3rem; }
+.domains-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
+.domain-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.domain-tag { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em; padding: 0.35em 0.9em; border: 1px solid var(--border); color: var(--fg-muted); transition: all 0.2s; }
+.domain-tag:hover { border-color: var(--red); color: var(--white); }
+
+/* ACHIEVEMENTS */
+.achieve-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+.achieve-table th { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
+.achieve-table td { padding: 1.1rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.achieve-table tr:hover td { background: var(--bg-elevated); }
+.rank { font-family: var(--font-mono); font-weight: 700; font-size: 1.2rem; }
+.rank.gold { color: #d4a017; }
+.rank.silver { color: #7a8a9e; }
+.comp-name { color: var(--white); font-weight: 600; }
+.comp-type { font-family: var(--font-mono); font-size: 0.6rem; color: var(--fg-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+.comp-year { color: var(--fg-dim); font-family: var(--font-mono); font-size: 0.78rem; }
+.comp-link { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-muted); border: 1px solid var(--border); padding: 0.3em 0.7em; border-radius: 3px; display: inline-flex; align-items: center; gap: 0.4em; transition: all 0.2s; }
+.comp-link:hover { border-color: var(--fg-muted); color: var(--white); }
+
+/* WRITEUPS */
+.writeup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); margin-top: 2rem; }
+.writeup-card { background: var(--bg); padding: 1.5rem; transition: background 0.2s; }
+.writeup-card:hover { background: var(--bg-elevated); }
+.writeup-card-cat { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.5rem; }
+.writeup-card h3 { font-size: 1rem; font-weight: 700; color: var(--white); margin: 0 0 0.5rem; }
+.writeup-card-meta { font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-dim); }
+.writeup-card-excerpt { font-size: 0.85rem; color: var(--fg-muted); margin-top: 0.5rem; line-height: 1.6; }
+.writeups-empty { margin-top: 2rem; padding: 3rem 2rem; border: 1px dashed var(--border); text-align: center; color: var(--fg-dim); font-family: var(--font-mono); font-size: 0.78rem; }
+
+/* TEAM */
+.team-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-bottom: 3rem; }
+.team-intro-text p { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+@media (max-width: 700px) { .team-intro { grid-template-columns: 1fr; } }
+.team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); }
+.member { padding: 1.5rem 1rem; text-align: center; background: var(--bg); transition: background 0.2s; }
+.member:hover { background: var(--bg-elevated); }
+.member-avatar { width: 68px; height: 68px; border-radius: 50%; margin: 0 auto 0.8rem; overflow: hidden; border: 2px solid var(--border); transition: border-color 0.3s; }
+.member:hover .member-avatar { border-color: var(--red); }
+.member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.member-pseudo { font-family: var(--font-mono); font-size: 0.8rem; color: var(--white); font-weight: 700; }
+.member-name { font-size: 0.72rem; color: var(--fg-dim); margin-top: 0.2rem; }
+.member-role { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-top: 0.4rem; }
+
+/* CTA */
+.cta-section { text-align: center; padding-block: 7rem; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, var(--red-glow) 0%, transparent 70%); pointer-events: none; }
+.cta-section h2 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 900; color: var(--white); margin: 0 0 0.8rem; position: relative; }
+.cta-section h2 em { font-style: normal; color: var(--red); }
+.cta-section p { color: var(--fg-muted); max-width: 500px; margin: 0 auto 2.5rem; font-size: 0.95rem; position: relative; }
+.cta-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
+.foot-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 2rem; align-items: start; }
+.foot-brand-block .foot-logo { height: 24px; margin-bottom: 0.5rem; display: block; }
+.foot-brand-block .foot-tagline { font-size: 0.7rem; color: var(--fg-dim); }
+.foot-nav { display: flex; gap: 2rem; flex-wrap: wrap; }
+.foot-nav a { font-size: 0.72rem; color: var(--fg-muted); transition: color 0.2s; }
+.foot-nav a:hover { color: var(--white); }
+.foot-socials { display: flex; gap: 0.6rem; justify-content: flex-end; }
+.foot-social { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--fg-muted); transition: all 0.2s; }
+.foot-social:hover { border-color: var(--fg-muted); color: var(--white); }
+.foot-social svg { width: 14px; height: 14px; fill: currentColor; }
+.foot-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.65rem; color: var(--fg-dim); font-family: var(--font-mono); letter-spacing: 0.05em; }
+@media (max-width: 700px) {
+  .foot-grid { grid-template-columns: 1fr; text-align: center; }
+  .foot-socials { justify-content: center; }
+  .foot-bottom { flex-direction: column; gap: 0.5rem; }
+}
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 400px; padding: 2.5rem 2rem; margin: 1rem; position: relative; }
+.modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-dim); font-size: 1.2rem; cursor: pointer; }
+.modal-close:hover { color: var(--white); }
+.modal h2 { font-size: 1.4rem; font-weight: 800; color: var(--white); margin: 0 0 0.3rem; }
+.modal .subtitle { font-size: 0.85rem; color: var(--fg-muted); margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.6rem 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--white); font-family: var(--font-display); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--red); }
+.form-group textarea { min-height: 200px; resize: vertical; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7; }
+.form-error { font-family: var(--font-mono); font-size: 0.7rem; color: var(--red); margin-top: 0.3rem; }
+.form-submit { width: 100%; padding: 0.7rem; background: var(--red); color: #fff; border: none; border-radius: 4px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
+.form-submit:hover { background: #ff2a30; }
+.form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.modal-switch { text-align: center; margin-top: 1.2rem; font-size: 0.8rem; color: var(--fg-muted); }
+.modal-switch a { cursor: pointer; }
+
+/* DASHBOARD */
+.dash-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+.dash-user { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); }
+.dash-user strong { color: var(--white); }
+.dash-actions { display: flex; gap: 0.5rem; }
+
+/* WRITEUP VIEWER */
+.writeup-view { max-width: 760px; margin: 0 auto; }
+.writeup-view h1 { font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; color: var(--white); margin: 0 0 0.8rem; line-height: 1.15; }
+.writeup-view-meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-bottom: 2rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.writeup-view-body { font-size: 0.95rem; line-height: 1.8; color: var(--fg); }
+.writeup-view-body p { margin: 0 0 1.2rem; }
+.writeup-view-body code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg-elevated); padding: 0.15em 0.4em; border-radius: 3px; border: 1px solid var(--border); }
+.writeup-view-body pre { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0 0 1.2rem; }
+.writeup-view-body pre code { background: none; border: none; padding: 0; }
+.writeup-view-body h2 { font-size: 1.3rem; font-weight: 700; color: var(--white); margin: 2rem 0 0.8rem; }
+.writeup-view-body h3 { font-size: 1.1rem; font-weight: 700; color: var(--white); margin: 1.5rem 0 0.6rem; }
+.back-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; margin-bottom: 2rem; }
+.back-link:hover { color: var(--white); }
+
+/* SCANLINE */
+.scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.4; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px); }
+</style>
+
+<div class="scanlines"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" onclick="showView('home');return false"><img src="logo.png" alt="SH1NY HUNT3RS" class="nav-logo-img"></a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="#about" data-en="About" data-fr="A propos">About</a></li>
+      <li><a href="#achievements" data-en="Achievements" data-fr="Palmares">Achievements</a></li>
+      <li><a onclick="showView('writeups-list');return false" style="cursor:pointer" data-en="Writeups" data-fr="Writeups">Writeups</a></li>
+      <li><a href="#team" data-en="Team" data-fr="Equipe">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="nav-btn" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <button class="nav-btn lang-btn" id="langBtn" aria-label="Switch language">FR</button>
+      <button class="nav-btn" id="themeBtn" aria-label="Toggle theme">&#9790;</button>
+      <span id="navAuth"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="signInForm">
+      <h2>Sign in</h2>
+      <div class="subtitle" data-en="Welcome back to SH1NY HUNT3RS." data-fr="Bon retour chez SH1NY HUNT3RS.">Welcome back to SH1NY HUNT3RS.</div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="siEmail" placeholder="hunter@sh1ny.team">
+      </div>
+      <div class="form-group">
+        <label data-en="Password" data-fr="Mot de passe">Password</label>
+        <input type="password" id="siPassword">
+      </div>
+      <div class="form-error" id="siError"></div>
+      <button class="form-submit" id="siBtn" onclick="doSignIn()" data-en="Sign in" data-fr="Se connecter">Sign in</button>
+      <div class="modal-switch" data-en="New here? <a onclick='toggleAuth()'>Join the team</a>" data-fr="Nouveau ? <a onclick='toggleAuth()'>Rejoins l'equipe</a>">New here? <a onclick="toggleAuth()">Join the team</a></div>
+    </div>
+    <div id="signUpForm" hidden>
+      <h2 data-en="Join the team" data-fr="Rejoins l'equipe">Join the team</h2>
+      <div class="subtitle" data-en="Create your SH1NY HUNT3RS account." data-fr="Cree ton compte SH1NY HUNT3RS.">Create your SH1NY HUNT3RS account.</div>
+      <div class="form-group">
+        <label>Pseudo</label>
+        <input type="text" id="suPseudo" placeholder="H4CK3R">
+      </div>
+      <div class="form-group">
+        <label data-en="Full name" data-fr="Nom complet">Full name</label>
+        <input type="text" id="suName" placeholder="LASTNAME Firstname">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="suEmail" placeholder="hunter@sh1ny.team">
+      </div>
+      <div class="form-group">
+        <label data-en="Password" data-fr="Mot de passe">Password</label>
+        <input type="password" id="suPassword" placeholder="Min. 6 characters">
+      </div>
+      <div class="form-error" id="suError"></div>
+      <button class="form-submit" id="suBtn" onclick="doSignUp()" data-en="Create account" data-fr="Creer le compte">Create account</button>
+      <div class="modal-switch" data-en="Already a member? <a onclick='toggleAuth()'>Sign in</a>" data-fr="Deja membre ? <a onclick='toggleAuth()'>Se connecter</a>">Already a member? <a onclick="toggleAuth()">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEWS -->
+<div id="view-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="eyebrow">Cybersecurity Collective</div>
+        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:0.5rem">SH1NY HUNT3RS</div>
+        <h1 data-en="How things work and what happens when they <em>don't.</em>" data-fr="Comment les choses fonctionnent et ce qui se passe quand elles <em>ne fonctionnent plus.</em>">How things work and what happens when they <em>don't.</em></h1>
+        <p data-en="Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see." data-fr="Hacking, competitions CTF et recherche de vulnerabilites. Une communaute beninoise qui traque ce que les autres ne voient pas.">Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see.</p>
+        <div class="hero-btns">
+          <a href="#achievements" class="btn btn-red" data-en="Our results" data-fr="Nos resultats">Our results</a>
+          <a href="#contact" class="btn btn-outline" data-en="Join the team ↗" data-fr="Rejoindre l'equipe ↗">Join the team ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-terminal">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+          <span class="terminal-title">sh1ny@hunt3rs ~ bash</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+          <div class="out" data-en="CTF team &amp; security research collective" data-fr="equipe CTF &amp; collectif de recherche en securite">CTF team &amp; security research collective</div>
+          <div><span class="prompt">$</span> <span class="cmd">cat mission.txt</span></div>
+          <div class="out" data-en="hack · compete · learn · repeat" data-fr="hacker · competir · apprendre · recommencer">hack · compete · learn · repeat</div>
+          <div><span class="prompt">$</span> <span class="cmd">cat location.txt</span></div>
+          <div class="out">Cotonou, Benin 🇧🇯</div>
+          <div><span class="prompt">$</span> <span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats" style="margin-top: 3rem;">
+  <div class="stat">
+    <div class="stat-idx">01 / TEAM</div>
+    <div class="stat-num">10</div>
+    <div class="stat-label" data-en="Members" data-fr="Membres">Members</div>
+  </div>
+  <div class="stat">
+    <div class="stat-idx">02 / COMPETE</div>
+    <div class="stat-num">+115</div>
+    <div class="stat-label" data-en="National &amp; international CTF competitions" data-fr="Competitions CTF nationales &amp; internationales">National &amp; international CTF competitions</div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="eyebrow" data-en="Our goals" data-fr="Nos objectifs">Our goals</div>
+    <h2 class="section-title" data-en="Break systems. Build skills. Represent Benin." data-fr="Casser des systemes. Monter en competences. Representer le Benin.">Break systems. Build skills. Represent Benin.</h2>
+    <div class="goals-grid">
+      <div class="goal">
+        <div class="goal-num">01</div>
+        <div class="goal-tag" data-en="HACK" data-fr="HACKER">HACK</div>
+        <h3 data-en="Break to Understand" data-fr="Casser pour comprendre">Break to Understand</h3>
+        <p data-en="Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail." data-fr="Explorer les systemes, trouver les failles, exploiter les vulnerabilites. On apprend en cassant les choses et en comprenant pourquoi elles echouent.">Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail.</p>
+        <a href="#achievements" class="goal-link" data-en="See our results ↗" data-fr="Voir nos resultats ↗">See our results ↗</a>
+      </div>
+      <div class="goal">
+        <div class="goal-num">02</div>
+        <div class="goal-tag" data-en="COMPETE" data-fr="COMPETIR">COMPETE</div>
+        <h3 data-en="Win Under Pressure" data-fr="Gagner sous pression">Win Under Pressure</h3>
+        <p data-en="CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round." data-fr="Les competitions CTF nous poussent a resoudre des problemes complexes rapidement. On compete au niveau national et international.">CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round.</p>
+        <a onclick="showView('writeups-list');return false" class="goal-link" style="cursor:pointer">Writeups ↗</a>
+      </div>
+      <div class="goal">
+        <div class="goal-num">03</div>
+        <div class="goal-tag" data-en="SHARE" data-fr="PARTAGER">SHARE</div>
+        <h3 data-en="Level Up Together" data-fr="Progresser ensemble">Level Up Together</h3>
+        <p data-en="Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers." data-fr="Le savoir grandit quand il est partage. On documente nos solutions, on enseigne des techniques et on se pousse a devenir de meilleurs chercheurs.">Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers.</p>
+        <a href="#team" class="goal-link" data-en="Meet the team ↗" data-fr="L'equipe ↗">Meet the team ↗</a>
+      </div>
+    </div>
+    <div class="domains">
+      <div class="domains-label" data-en="Our fields" data-fr="Nos domaines">Our fields</div>
+      <div class="domain-tags">
+        <span class="domain-tag">Web</span><span class="domain-tag">Pwn</span><span class="domain-tag">Reverse</span><span class="domain-tag">Crypto</span><span class="domain-tag">Forensics</span><span class="domain-tag">OSINT</span><span class="domain-tag">Hardware</span><span class="domain-tag">Cloud</span><span class="domain-tag">AI / ML</span><span class="domain-tag">Misc</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ACHIEVEMENTS -->
+<section class="section" id="achievements">
+  <div class="container">
+    <div class="eyebrow">scoreboard.log</div>
+    <h2 class="section-title" data-en="Our Achievements" data-fr="Nos resultats">Our Achievements</h2>
+    <table class="achieve-table">
+      <thead><tr>
+        <th data-en="Rank" data-fr="Rang">Rank</th>
+        <th>Competition</th>
+        <th data-en="Year" data-fr="Annee">Year</th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="rank gold">#1</span></td>
+          <td><span class="comp-name">HackerLab 2026</span><br><span class="comp-type">CTF</span></td>
+          <td><span class="comp-year">2026</span></td>
+          <td><a class="comp-link" href="https://ctf.hackerlab.bj/scoreboard" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
+        </tr>
+        <tr>
+          <td><span class="rank gold">#1</span></td>
+          <td><span class="comp-name">Qualifs HackerLab 2026</span><br><span class="comp-type">CTF</span></td>
+          <td><span class="comp-year">2026</span></td>
+          <td><a class="comp-link" href="https://asin.bj/article/75/hackerlab-2026-equipes-qualifiees/" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
+        </tr>
+        <tr>
+          <td><span class="rank silver">#2</span></td>
+          <td><span class="comp-name">Epihack Finale 2026</span><br><span class="comp-type">CTF</span></td>
+          <td><span class="comp-year">2026</span></td>
+          <td><a class="comp-link" href="https://epihack.site/" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WRITEUPS (home preview) -->
+<section class="section" id="writeups">
+  <div class="container">
+    <div class="eyebrow">knowledge.base</div>
+    <h2 class="section-title">Writeups</h2>
+    <div id="homeWriteups"></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TEAM -->
+<section class="section" id="team">
+  <div class="container">
+    <div class="eyebrow" data-en="The Hunters" data-fr="Les Hunters">The Hunters</div>
+    <div class="team-intro">
+      <h2 class="section-title" data-en="Meet the Team" data-fr="L'equipe">Meet the Team</h2>
+      <div class="team-intro-text">
+        <p data-en="The people behind the flags, the exploits, and the late-night debugging sessions." data-fr="Ceux derriere les flags, les exploits et les sessions de debug jusqu'au bout de la nuit.">The people behind the flags, the exploits, and the late-night debugging sessions.</p>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="member">
+        <div class="member-avatar"><img src="unp4tch3.webp" alt="UNP4TCH3D"></div>
+        <div class="member-pseudo">UNP4TCH3D</div>
+        <div class="member-name">ADANHOUNDJI Eliel Fresnel</div>
+        <div class="member-role">Founder</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div>
+        <div class="member-pseudo">K1LLS3VR4Q</div>
+        <div class="member-name">TOGBEDJI Daziano</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div>
+        <div class="member-pseudo">Le_Geek</div>
+        <div class="member-name">AGOUNLOYE Amir</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div>
+        <div class="member-pseudo">I_Am_Atomic</div>
+        <div class="member-name">AHOMAGNON Aurel</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div>
+        <div class="member-pseudo">Josi_hack</div>
+        <div class="member-name">BATONON Josias</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div>
+        <div class="member-pseudo">cbk_667</div>
+        <div class="member-name">AZOMBADE Frejus</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div>
+        <div class="member-pseudo">K0BR4</div>
+        <div class="member-name">BABALOLA Dimitri</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div>
+        <div class="member-pseudo">Mr_Nobody</div>
+        <div class="member-name">LOKO HADJIHOU David</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div>
+        <div class="member-pseudo">Hakim lyons</div>
+        <div class="member-name">GBETOHO Jose</div>
+      </div>
+      <div class="member">
+        <div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div>
+        <div class="member-pseudo">Ryuk_kira</div>
+        <div class="member-name">GNONLONFIN Frankel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="eyebrow" style="justify-content:center" data-en="Join the hunt" data-fr="Rejoins la chasse">Join the hunt</div>
+    <h2 data-en="Join the <em>team.</em>" data-fr="Rejoins l'<em>equipe.</em>">Join the <em>team.</em></h2>
+    <p data-en="Learn with us, compete with us, and help put Benin on the global CTF map." data-fr="Apprends avec nous, compete avec nous et aide a mettre le Benin sur la carte mondiale du CTF.">Learn with us, compete with us, and help put Benin on the global CTF map.</p>
+    <div class="cta-btns">
+      <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="btn btn-red">GitHub ↗</a>
+      <button class="btn btn-outline" onclick="openModal('signup')" data-en="Create account" data-fr="Creer un compte">Create account</button>
+    </div>
+  </div>
+</section>
+
+</div><!-- /view-home -->
+
+<!-- WRITEUPS LIST VIEW -->
+<div id="view-writeups-list" hidden>
+  <section class="section">
+    <div class="container">
+      <a class="back-link" onclick="showView('home')">← Back to home</a>
+      <div class="eyebrow">knowledge.base</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+        <h2 class="section-title">Writeups</h2>
+        <button class="btn btn-red" id="newWriteupBtn" onclick="showView('editor')" hidden data-en="New writeup" data-fr="Nouveau writeup">New writeup</button>
+      </div>
+      <div id="writeupsList"></div>
+    </div>
+  </section>
+</div>
+
+<!-- WRITEUP VIEWER -->
+<div id="view-writeup" hidden>
+  <section class="section">
+    <div class="container">
+      <div class="writeup-view" id="writeupContent"></div>
+    </div>
+  </section>
+</div>
+
+<!-- EDITOR VIEW -->
+<div id="view-editor" hidden>
+  <section class="section">
+    <div class="container" style="max-width:760px">
+      <a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a>
+      <div class="eyebrow" data-en="Write" data-fr="Ecrire">Write</div>
+      <h2 class="section-title" id="editorTitle" data-en="New Writeup" data-fr="Nouveau writeup">New Writeup</h2>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="edTitle" placeholder="HackerLab 2026 : Web Challenge XSS">
+      </div>
+      <div class="form-group">
+        <label data-en="Category" data-fr="Categorie">Category</label>
+        <select id="edCat">
+          <option value="web">Web</option><option value="pwn">Pwn</option><option value="reverse">Reverse</option>
+          <option value="crypto">Crypto</option><option value="forensics">Forensics</option><option value="osint">OSINT</option>
+          <option value="misc" selected>Misc</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-en="Content (Markdown)" data-fr="Contenu (Markdown)">Content (Markdown)</label>
+        <textarea id="edContent" placeholder="## Challenge&#10;&#10;Description...&#10;&#10;## Solution&#10;&#10;```python&#10;# exploit code&#10;```"></textarea>
+      </div>
+      <div class="form-error" id="edError"></div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="saveWriteup(false)" data-en="Save draft" data-fr="Brouillon">Save draft</button>
+        <button class="btn btn-red" onclick="saveWriteup(true)" data-en="Publish" data-fr="Publier">Publish</button>
+      </div>
+      <input type="hidden" id="edId" value="">
+    </div>
+  </section>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div id="view-dashboard" hidden>
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow">dashboard</div>
+      <div class="dash-header">
+        <div>
+          <h2 class="section-title" style="margin-bottom:0">Dashboard</h2>
+          <div class="dash-user" id="dashUser"></div>
+        </div>
+        <div class="dash-actions">
+          <button class="btn btn-red" onclick="showView('editor')" data-en="New writeup" data-fr="Nouveau writeup">New writeup</button>
+          <button class="btn btn-outline" onclick="doSignOut()" data-en="Sign out" data-fr="Deconnexion">Sign out</button>
+        </div>
+      </div>
+      <h3 style="color:var(--white);font-size:1rem;margin:2rem 0 1rem" data-en="My writeups" data-fr="Mes writeups">My writeups</h3>
+      <div id="myWriteups"></div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER (always visible) -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand-block">
+        <img src="logo.png" alt="SH1NY HUNT3RS" class="foot-logo">
+        <div class="foot-tagline" data-en="Cybersecurity. Community. Benin." data-fr="Cybersecurite. Communaute. Benin.">Cybersecurity. Community. Benin.</div>
+      </div>
+      <div class="foot-nav">
+        <a href="#about" data-en="About" data-fr="A propos">About</a>
+        <a href="#achievements" data-en="Achievements" data-fr="Palmares">Achievements</a>
+        <a onclick="showView('writeups-list')" style="cursor:pointer">Writeups</a>
+        <a href="#team" data-en="Team" data-fr="Equipe">Team</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="foot-socials">
+        <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="foot-social" aria-label="GitHub"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 SH1NY HUNT3RS</span>
+      <span>COTONOU &middot; BJ</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://mhyckmtdqwrfhddtoyok.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_jcOLmuZG6mYy7tY7D3JO_Q_L1nvFO0U';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+
+// THEME
+const themeBtn = document.getElementById('themeBtn');
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  themeBtn.innerHTML = t === 'dark' ? '&#9788;' : '&#9790;';
+  try { localStorage.setItem('sh-theme', t); } catch(e) {}
+}
+try { const s = localStorage.getItem('sh-theme'); if (s) setTheme(s); } catch(e) {}
+themeBtn.addEventListener('click', () => {
+  const c = document.documentElement.getAttribute('data-theme');
+  setTheme(c === 'light' ? 'dark' : 'light');
+});
+
+// LANG
+const langBtn = document.getElementById('langBtn');
+let currentLang = 'en';
+function setLang(lang) {
+  currentLang = lang;
+  langBtn.textContent = lang === 'en' ? 'FR' : 'EN';
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+  try { localStorage.setItem('sh-lang', lang); } catch(e) {}
+}
+try { const sl = localStorage.getItem('sh-lang'); if (sl) setLang(sl); } catch(e) {}
+langBtn.addEventListener('click', () => setLang(currentLang === 'en' ? 'fr' : 'en'));
+
+// VIEWS
+const views = ['home','writeups-list','writeup','editor','dashboard'];
+function showView(name) {
+  views.forEach(v => {
+    const el = document.getElementById('view-' + v);
+    if (el) el.hidden = (v !== name);
+  });
+  window.scrollTo(0, 0);
+  document.querySelector('.nav-links')?.classList.remove('open');
+  if (name === 'writeups-list') loadWriteups();
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'editor' && !document.getElementById('edId').value) {
+    document.getElementById('edTitle').value = '';
+    document.getElementById('edContent').value = '';
+    document.getElementById('edCat').value = 'misc';
+    document.getElementById('edId').value = '';
+    document.getElementById('edError').textContent = '';
+  }
+}
+
+// AUTH MODAL
+function openModal(mode) {
+  document.getElementById('authModal').classList.add('active');
+  document.getElementById('signInForm').hidden = (mode === 'signup');
+  document.getElementById('signUpForm').hidden = (mode !== 'signup');
+  document.getElementById('siError').textContent = '';
+  document.getElementById('suError').textContent = '';
+}
+function closeModal() { document.getElementById('authModal').classList.remove('active'); }
+function toggleAuth() {
+  const isSignUp = !document.getElementById('signUpForm').hidden;
+  openModal(isSignUp ? 'signin' : 'signup');
+}
+
+// SIGN IN
+async function doSignIn() {
+  const btn = document.getElementById('siBtn');
+  const err = document.getElementById('siError');
+  btn.disabled = true; err.textContent = '';
+  const email = document.getElementById('siEmail').value.trim();
+  const password = document.getElementById('siPassword').value;
+  if (!email || !password) { err.textContent = 'Fill all fields'; btn.disabled = false; return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent = error.message; btn.disabled = false; return; }
+  closeModal();
+  btn.disabled = false;
+}
+
+// SIGN UP
+async function doSignUp() {
+  const btn = document.getElementById('suBtn');
+  const err = document.getElementById('suError');
+  btn.disabled = true; err.textContent = '';
+  const pseudo = document.getElementById('suPseudo').value.trim();
+  const fullName = document.getElementById('suName').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const password = document.getElementById('suPassword').value;
+  if (!pseudo || !email || !password) { err.textContent = 'Fill all required fields'; btn.disabled = false; return; }
+  if (password.length < 6) { err.textContent = 'Password: min. 6 characters'; btn.disabled = false; return; }
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if (error) { err.textContent = error.message; btn.disabled = false; return; }
+  if (data.user) {
+    await sb.from('profiles').insert({ id: data.user.id, pseudo, full_name: fullName, role: 'member' });
+  }
+  closeModal();
+  btn.disabled = false;
+}
+
+// SIGN OUT
+async function doSignOut() {
+  await sb.auth.signOut();
+  showView('home');
+}
+
+// AUTH STATE
+function updateNavAuth(user) {
+  const el = document.getElementById('navAuth');
+  if (user) {
+    el.innerHTML = '<span class="nav-cta" onclick="showView(\'dashboard\')" style="cursor:pointer">Dashboard</span>';
+  } else {
+    el.innerHTML = '<span class="nav-cta" onclick="openModal(\'signin\')" style="cursor:pointer" data-en="Sign in" data-fr="Connexion">Sign in</span>';
+    if (currentLang !== 'en') setLang(currentLang);
+  }
+  document.getElementById('newWriteupBtn').hidden = !user;
+}
+
+sb.auth.onAuthStateChange(async (event, session) => {
+  currentUser = session?.user || null;
+  if (currentUser) {
+    const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+    currentProfile = data;
+  } else {
+    currentProfile = null;
+  }
+  updateNavAuth(currentUser);
+});
+
+// MARKDOWN SIMPLE RENDERER
+function md(text) {
+  if (!text) return '';
+  let h = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+  h = h.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => '<pre><code>' + code.trim() + '</code></pre>');
+  h = h.split(/\n\n+/).map(p => {
+    p = p.trim();
+    if (p.startsWith('<h') || p.startsWith('<pre')) return p;
+    return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+  }).join('\n');
+  return h;
+}
+
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').substring(0, 80);
+}
+
+// LOAD WRITEUPS
+async function loadWriteups() {
+  const container = document.getElementById('writeupsList');
+  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  const { data, error } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false });
+  if (error || !data?.length) {
+    container.innerHTML = '<div class="writeups-empty" data-' + currentLang + '="' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '">' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '</div>';
+    return;
+  }
+  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
+    <div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer">
+      <div class="writeup-card-cat">${w.category}</div>
+      <h3>${esc(w.title)}</h3>
+      <div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div>
+      <div class="writeup-card-excerpt">${esc(w.content.substring(0, 150))}...</div>
+    </div>
+  `).join('') + '</div>';
+}
+
+// LOAD HOME WRITEUPS
+async function loadHomeWriteups() {
+  const container = document.getElementById('homeWriteups');
+  const { data } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false }).limit(3);
+  if (!data?.length) {
+    container.innerHTML = '<div class="writeups-empty" data-en="// Coming soon" data-fr="// Bientot disponible">// Coming soon</div>';
+    if (currentLang !== 'en') setLang(currentLang);
+    return;
+  }
+  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
+    <div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer">
+      <div class="writeup-card-cat">${w.category}</div>
+      <h3>${esc(w.title)}</h3>
+      <div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div>
+    </div>
+  `).join('') + '</div>';
+}
+
+// VIEW SINGLE WRITEUP
+async function viewWriteup(id) {
+  showView('writeup');
+  const container = document.getElementById('writeupContent');
+  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  const { data } = await sb.from('writeups').select('*, profiles(pseudo)').eq('id', id).single();
+  if (!data) { container.innerHTML = 'Not found'; return; }
+  container.innerHTML = `
+    <a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a>
+    <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:0.5rem">${data.category}</div>
+    <h1>${esc(data.title)}</h1>
+    <div class="writeup-view-meta">
+      <span>${data.profiles?.pseudo || 'Anonymous'}</span>
+      <span>${new Date(data.created_at).toLocaleDateString()}</span>
+    </div>
+    <div class="writeup-view-body">${md(data.content)}</div>
+  `;
+}
+
+// DASHBOARD
+async function loadDashboard() {
+  if (!currentUser) { openModal('signin'); showView('home'); return; }
+  const userEl = document.getElementById('dashUser');
+  userEl.innerHTML = currentProfile ? '<strong>' + esc(currentProfile.pseudo) + '</strong> &middot; ' + currentUser.email : currentUser.email;
+  const container = document.getElementById('myWriteups');
+  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  const { data } = await sb.from('writeups').select('*').eq('author_id', currentUser.id).order('created_at', { ascending: false });
+  if (!data?.length) {
+    container.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? 'Aucun writeup. Ecris ton premier !' : 'No writeups yet. Write your first one!') + '</div>';
+    return;
+  }
+  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
+    <div class="writeup-card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div class="writeup-card-cat">${w.category} ${w.published ? '' : '&middot; DRAFT'}</div>
+        <div style="display:flex;gap:0.4rem">
+          <span style="cursor:pointer;font-size:0.7rem;color:var(--fg-muted)" onclick="editWriteup(${w.id})">Edit</span>
+          <span style="cursor:pointer;font-size:0.7rem;color:var(--red)" onclick="deleteWriteup(${w.id})">Delete</span>
+        </div>
+      </div>
+      <h3>${esc(w.title)}</h3>
+      <div class="writeup-card-meta">${new Date(w.created_at).toLocaleDateString()} ${w.published ? '' : '(draft)'}</div>
+    </div>
+  `).join('') + '</div>';
+}
+
+// SAVE WRITEUP
+async function saveWriteup(publish) {
+  if (!currentUser) { openModal('signin'); return; }
+  const title = document.getElementById('edTitle').value.trim();
+  const content = document.getElementById('edContent').value.trim();
+  const category = document.getElementById('edCat').value;
+  const id = document.getElementById('edId').value;
+  const err = document.getElementById('edError');
+  if (!title || !content) { err.textContent = 'Title and content are required'; return; }
+  err.textContent = '';
+  const slug = slugify(title) + '-' + Date.now().toString(36);
+  const row = { title, content, category, slug, published: publish, author_id: currentUser.id, updated_at: new Date().toISOString() };
+  if (id) {
+    delete row.slug; delete row.author_id;
+    const { error } = await sb.from('writeups').update(row).eq('id', parseInt(id));
+    if (error) { err.textContent = error.message; return; }
+  } else {
+    const { error } = await sb.from('writeups').insert(row);
+    if (error) { err.textContent = error.message; return; }
+  }
+  showView('dashboard');
+}
+
+// EDIT WRITEUP
+async function editWriteup(id) {
+  const { data } = await sb.from('writeups').select('*').eq('id', id).single();
+  if (!data) return;
+  document.getElementById('edId').value = data.id;
+  document.getElementById('edTitle').value = data.title;
+  document.getElementById('edContent').value = data.content;
+  document.getElementById('edCat').value = data.category;
+  document.getElementById('edError').textContent = '';
+  showView('editor');
+}
+
+// DELETE WRITEUP
+async function deleteWriteup(id) {
+  await sb.from('writeups').delete().eq('id', id);
+  loadDashboard();
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// INIT
+loadHomeWriteups();
+</script>
