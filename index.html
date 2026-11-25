@@ -3,6 +3,8 @@
 <meta name="description" content="SH1NY HUNT3RS — Benin's elite CTF team and cybersecurity research collective.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 :root {
   --bg: #050508;
@@ -63,7 +65,7 @@ img { max-width: 100%; }
 .container { max-width: 1200px; margin: 0 auto; }
 [hidden] { display: none !important; }
 
-/* GLOBAL COMPONENTS */
+/* EYEBROW / SECTION */
 .eyebrow {
   font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em;
   text-transform: uppercase; color: var(--red-soft);
@@ -78,6 +80,7 @@ img { max-width: 100%; }
 .section { padding-block: 6rem; }
 .divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0; }
 
+/* BUTTONS */
 .btn {
   font-family: var(--font-mono); font-size: 0.72rem; padding: 0.75em 1.6em;
   font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
@@ -88,20 +91,9 @@ img { max-width: 100%; }
   background: var(--red); color: #fff;
   box-shadow: 0 0 20px rgba(255,42,42,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
 }
-.btn-red:hover { background: var(--red-soft); color: #fff; box-shadow: 0 0 30px rgba(255,42,42,0.4); transform: translateY(-1px); }
-.btn-outline {
-  border: 1px solid var(--border-light); color: var(--fg-muted); background: transparent;
-}
+.btn-red:hover { background: var(--red-soft); color: #fff; box-shadow: 0 0 40px rgba(255,42,42,0.5); transform: translateY(-2px); }
+.btn-outline { border: 1px solid var(--border-light); color: var(--fg-muted); background: transparent; }
 .btn-outline:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
-.btn-ghost {
-  background: var(--bg-glass); border: 1px solid var(--border); color: var(--fg-muted);
-  backdrop-filter: blur(8px);
-}
-.btn-ghost:hover { border-color: var(--red); color: var(--white); }
-
-/* SMOOTH REVEAL */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
 
 /* NAV */
 nav {
@@ -114,50 +106,22 @@ body::before {
   content: ""; position: fixed; inset: 0 0 auto;
   height: env(safe-area-inset-top, 0px); z-index: 101; background: var(--bg);
 }
-.nav-inner {
-  max-width: 1200px; margin: 0 auto; display: flex;
-  align-items: center; padding: 0.75rem 0; gap: 1.5rem;
-}
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; padding: 0.75rem 0; gap: 1.5rem; }
 .nav-logo { display: flex; align-items: center; gap: 0.6rem; }
 .nav-logo-img { height: 28px; width: auto; }
-.nav-logo-text {
-  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.15em; color: var(--white); text-transform: uppercase;
-}
-.nav-links {
-  display: flex; gap: 1.8rem; list-style: none;
-  margin: 0 0 0 auto; padding: 0;
-}
-.nav-links a {
-  font-family: var(--font-display); font-size: 0.78rem; color: var(--fg-muted);
-  letter-spacing: 0.01em; font-weight: 500; transition: color 0.2s; cursor: pointer;
-}
-.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links { display: flex; gap: 1.8rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav-links a { font-family: var(--font-display); font-size: 0.78rem; color: var(--fg-muted); font-weight: 500; transition: color 0.2s; cursor: pointer; }
+.nav-links a:hover { color: var(--white); }
 .nav-right { display: flex; align-items: center; gap: 0.4rem; margin-left: 0.5rem; }
-.nav-btn {
-  background: none; border: 1px solid var(--border); color: var(--fg-muted);
-  height: 32px; width: 32px; border-radius: var(--radius-sm); cursor: pointer;
-  display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
-  transition: all 0.2s;
-}
+.nav-btn { background: none; border: 1px solid var(--border); color: var(--fg-muted); height: 32px; width: 32px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: all 0.2s; }
 .nav-btn:hover { border-color: var(--fg-muted); color: var(--white); }
 .lang-btn { width: auto; padding: 0 10px; font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; }
-.nav-cta {
-  font-family: var(--font-mono); font-size: 0.68rem; padding: 0.5em 1.2em;
-  background: var(--red); color: #fff; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; border-radius: var(--radius-sm); transition: all 0.25s;
-  cursor: pointer; box-shadow: 0 0 16px rgba(255,42,42,0.2);
-}
-.nav-cta:hover { background: var(--red-soft); color: #fff; box-shadow: 0 0 24px rgba(255,42,42,0.35); }
+.nav-cta { font-family: var(--font-mono); font-size: 0.68rem; padding: 0.5em 1.2em; background: var(--red); color: #fff; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-radius: var(--radius-sm); transition: all 0.25s; cursor: pointer; box-shadow: 0 0 16px rgba(255,42,42,0.2); }
+.nav-cta:hover { background: var(--red-soft); box-shadow: 0 0 24px rgba(255,42,42,0.35); }
 .hamburger { display: none; background: none; border: none; color: var(--fg); font-size: 1.3rem; cursor: pointer; padding: 4px; }
 @media (max-width: 800px) {
   .nav-links { display: none; }
-  .nav-links.open {
-    display: flex; position: absolute; top: 100%; left: 0; right: 0;
-    flex-direction: column; background: var(--bg-elevated);
-    border-bottom: 1px solid var(--border);
-    padding: 1.2rem max(16px, env(safe-area-inset-left, 0px)); gap: 0.8rem; z-index: 99;
-  }
+  .nav-links.open { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: var(--bg-elevated); border-bottom: 1px solid var(--border); padding: 1.2rem max(16px, env(safe-area-inset-left, 0px)); gap: 0.8rem; z-index: 99; }
   .hamburger { display: block; margin-left: auto; }
   .nav-right { margin-left: 0; }
 }
@@ -166,25 +130,9 @@ body::before {
 .hero {
   padding-top: calc(env(safe-area-inset-top, 0px) + 4rem);
   padding-bottom: 2rem; position: relative; overflow: hidden;
-  min-height: 90vh; display: flex; align-items: center;
+  min-height: 100vh; display: flex; align-items: center;
 }
-.hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 40%, rgba(255,42,42,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 80% 30%, rgba(168,85,247,0.04) 0%, transparent 50%);
-}
-.hero-grid-anim {
-  position: absolute; inset: 0; z-index: 0; opacity: 0.12;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
-  animation: grid-drift 20s linear infinite;
-}
-@keyframes grid-drift { to { background-position: 60px 60px; } }
+#heroCanvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; }
 .hero-content { position: relative; z-index: 2; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 0.5em;
@@ -192,29 +140,38 @@ body::before {
   background: var(--red-glow); border: 1px solid var(--border-glow);
   font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--red-soft); margin-bottom: 2rem;
+  opacity: 0;
 }
 .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse-dot 2s ease infinite; }
-@keyframes pulse-dot { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,42,42,0.4); } 50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,42,42,0); } }
+@keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 0 rgba(255,42,42,0.4); } 50% { box-shadow: 0 0 0 8px rgba(255,42,42,0); } }
+
+/* GLITCH EFFECT */
+.hero-name {
+  display: block; font-family: var(--font-mono); font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  letter-spacing: 0.3em; color: var(--red); font-weight: 700;
+  margin-bottom: 0.8rem; text-transform: uppercase; position: relative;
+}
+.hero-name:hover { animation: glitch 0.3s linear; }
+@keyframes glitch {
+  0% { text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-purple); }
+  25% { text-shadow: -2px -1px var(--accent-cyan), 2px 1px var(--accent-purple); }
+  50% { text-shadow: 1px 2px var(--accent-cyan), -1px -2px var(--accent-purple); }
+  75% { text-shadow: -1px 1px var(--accent-cyan), 1px -1px var(--accent-purple); }
+  100% { text-shadow: 0 0 transparent; }
+}
+
 .hero-title {
   font-family: var(--font-display); font-size: clamp(2.8rem, 6.5vw, 5rem);
   font-weight: 900; color: var(--white); line-height: 1.02; margin: 0 0 0.3em;
   letter-spacing: -0.03em;
 }
-.hero-title .hero-name {
-  display: block; font-family: var(--font-mono); font-size: clamp(1rem, 2.2vw, 1.4rem);
-  letter-spacing: 0.28em; color: var(--red); font-weight: 700;
-  margin-bottom: 0.6rem; text-transform: uppercase;
-}
 .hero-title em { font-style: normal; color: var(--red); }
-.hero-title .stroke {
-  -webkit-text-stroke: 1.5px var(--fg-dim); color: transparent;
-}
+.hero-title .word { display: inline-block; opacity: 0; transform: translateY(40px); }
 .hero-sub {
   font-size: 1.05rem; color: var(--fg-muted); max-width: 500px;
-  margin: 0 0 2.5rem; line-height: 1.75; font-weight: 400;
+  margin: 0 0 2.5rem; line-height: 1.75; opacity: 0;
 }
-.hero-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-
+.hero-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; opacity: 0; }
 .hero-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; }
 @media (max-width: 900px) { .hero-layout { grid-template-columns: 1fr; gap: 2rem; } .hero { min-height: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 3rem); } }
 
@@ -222,13 +179,9 @@ body::before {
 .terminal {
   background: var(--bg-card); border: 1px solid var(--border-light);
   border-radius: var(--radius); font-family: var(--font-mono); font-size: 0.72rem;
-  overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(255,42,42,0.03);
-  position: relative;
-}
-.terminal::before {
-  content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--border-glow), transparent 50%);
-  z-index: -1;
+  overflow: hidden; box-shadow: 0 20px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,42,42,0.05);
+  position: relative; opacity: 0; transform: translateY(30px) rotateX(5deg);
+  transform-origin: center bottom;
 }
 .terminal-bar {
   display: flex; align-items: center; gap: 6px; padding: 10px 14px;
@@ -239,31 +192,31 @@ body::before {
 .terminal-dot.y { background: #febc2e; }
 .terminal-dot.g { background: #28c840; }
 .terminal-title { margin-left: auto; color: var(--fg-dim); font-size: 0.6rem; }
-.terminal-body { padding: 1rem 1.2rem; line-height: 2; }
+.terminal-body { padding: 1rem 1.2rem; line-height: 2; min-height: 180px; }
 .terminal-body .prompt { color: var(--accent-cyan); }
 .terminal-body .cmd { color: var(--white); }
 .terminal-body .out { color: var(--fg-muted); }
 .cursor { display: inline-block; width: 7px; height: 15px; background: var(--red); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
+.typed-line { overflow: hidden; white-space: nowrap; }
 
-/* STATS STRIP */
+/* STATS */
 .stats-strip {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-  background: var(--border); border-radius: var(--radius); overflow: hidden;
-  margin-top: 4rem;
+  background: var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 4rem;
 }
 .stat-item {
-  background: var(--bg-card); padding: 2rem 1.5rem; text-align: center;
-  position: relative; overflow: hidden;
+  background: var(--bg-card); padding: 2.2rem 1.5rem; text-align: center;
+  position: relative; overflow: hidden; transition: all 0.3s;
 }
 .stat-item::before {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 0%, var(--red-glow) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 0%, var(--red-glow-strong) 0%, transparent 70%);
   opacity: 0; transition: opacity 0.4s;
 }
 .stat-item:hover::before { opacity: 1; }
 .stat-num {
-  font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem);
+  font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 900; color: var(--white); line-height: 1; font-variant-numeric: tabular-nums;
   position: relative;
 }
@@ -273,41 +226,31 @@ body::before {
 }
 @media (max-width: 600px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } }
 
-/* ABOUT / GOALS */
+/* GOALS */
 .goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
 .goal-card {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: all 0.35s;
+  padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
 }
-.goal-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+.goal-card:hover { border-color: var(--border-glow); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 0 30px var(--red-glow); }
 .goal-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--red), transparent);
-  opacity: 0; transition: opacity 0.3s;
+  background: linear-gradient(90deg, var(--red), var(--accent-purple));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
 }
-.goal-card:hover::before { opacity: 1; }
-.goal-icon {
-  width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center;
-  justify-content: center; font-size: 1.2rem; margin-bottom: 1.5rem;
-  background: var(--red-glow); border: 1px solid var(--border-glow);
+.goal-card:hover::before { transform: scaleX(1); }
+.goal-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,42,42,0.06) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
 }
-.goal-num {
-  font-family: var(--font-mono); font-size: 5rem; font-weight: 900;
-  color: var(--border); line-height: 1; position: absolute; top: 0.5rem;
-  right: 1.5rem; pointer-events: none; user-select: none;
-}
-.goal-tag {
-  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--red-soft); margin-bottom: 1rem;
-}
+.goal-card:hover::after { opacity: 1; }
+.goal-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 1.5rem; background: var(--red-glow); border: 1px solid var(--border-glow); }
+.goal-num { font-family: var(--font-mono); font-size: 5rem; font-weight: 900; color: var(--border); line-height: 1; position: absolute; top: 0.5rem; right: 1.5rem; pointer-events: none; user-select: none; }
+.goal-tag { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red-soft); margin-bottom: 1rem; }
 .goal-card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 0 0 0.6rem; }
 .goal-card p { font-size: 0.88rem; color: var(--fg-muted); line-height: 1.7; margin: 0 0 1.5rem; }
-.goal-link {
-  font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-muted);
-  display: inline-flex; align-items: center; gap: 0.4em;
-  padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: var(--radius-sm);
-  transition: all 0.25s;
-}
+.goal-link { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-muted); display: inline-flex; align-items: center; gap: 0.4em; padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: var(--radius-sm); transition: all 0.25s; }
 .goal-link:hover { border-color: var(--red); color: var(--red-soft); background: var(--red-glow); }
 @media (max-width: 800px) { .goals-grid { grid-template-columns: 1fr; } }
 
@@ -315,60 +258,42 @@ body::before {
 .domains { margin-top: 3.5rem; }
 .domains-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
 .domain-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.domain-tag {
-  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
-  padding: 0.4em 1em; border: 1px solid var(--border); color: var(--fg-muted);
-  border-radius: 100px; transition: all 0.25s; cursor: default;
-}
-.domain-tag:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
+.domain-tag { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em; padding: 0.4em 1em; border: 1px solid var(--border); color: var(--fg-muted); border-radius: 100px; transition: all 0.25s; cursor: default; }
+.domain-tag:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); box-shadow: 0 0 15px var(--red-glow); }
 
 /* ACHIEVEMENTS */
 .achieve-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
 .achieve-card {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 1.8rem 2rem; display: flex; align-items: center; gap: 1.5rem;
-  transition: all 0.3s; position: relative; overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
 }
-.achieve-card:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+.achieve-card:hover { border-color: var(--border-glow); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
 .achieve-card.gold { border-left: 3px solid #f59e0b; }
 .achieve-card.silver { border-left: 3px solid #64748b; }
-.achieve-rank {
-  font-family: var(--font-display); font-weight: 900; font-size: 2rem; min-width: 50px;
-}
-.achieve-rank.gold { color: #f59e0b; }
+.achieve-rank { font-family: var(--font-display); font-weight: 900; font-size: 2.2rem; min-width: 55px; }
+.achieve-rank.gold { color: #f59e0b; text-shadow: 0 0 20px rgba(245,158,11,0.3); }
 .achieve-rank.silver { color: #94a3b8; }
 .achieve-info { flex: 1; min-width: 0; }
 .achieve-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--white); }
 .achieve-type { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-top: 0.2rem; }
 .achieve-year { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-dim); }
-.achieve-link {
-  font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-muted);
-  border: 1px solid var(--border); padding: 0.35em 0.8em; border-radius: var(--radius-sm);
-  transition: all 0.25s; white-space: nowrap;
-}
+.achieve-link { font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-muted); border: 1px solid var(--border); padding: 0.35em 0.8em; border-radius: var(--radius-sm); transition: all 0.25s; white-space: nowrap; }
 .achieve-link:hover { border-color: var(--red); color: var(--red-soft); }
 
 /* WRITEUPS */
 .writeup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
 .writeup-card {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 1.8rem; transition: all 0.3s; position: relative; overflow: hidden;
+  padding: 1.8rem; transition: all 0.35s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
 }
-.writeup-card:hover { border-color: var(--border-glow); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
-.writeup-card-cat {
-  font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--red-soft); margin-bottom: 0.6rem;
-  display: inline-flex; align-items: center; gap: 0.4em;
-}
+.writeup-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+.writeup-card-cat { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-soft); margin-bottom: 0.6rem; display: inline-flex; align-items: center; gap: 0.4em; }
 .writeup-card-cat::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--red); }
 .writeup-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--white); margin: 0 0 0.5rem; line-height: 1.3; }
 .writeup-card-meta { font-family: var(--font-mono); font-size: 0.62rem; color: var(--fg-dim); }
 .writeup-card-excerpt { font-size: 0.84rem; color: var(--fg-muted); margin-top: 0.6rem; line-height: 1.6; }
-.writeups-empty {
-  margin-top: 2rem; padding: 4rem 2rem; border: 1px dashed var(--border);
-  border-radius: var(--radius); text-align: center; color: var(--fg-dim);
-  font-family: var(--font-mono); font-size: 0.75rem;
-}
+.writeups-empty { margin-top: 2rem; padding: 4rem 2rem; border: 1px dashed var(--border); border-radius: var(--radius); text-align: center; color: var(--fg-dim); font-family: var(--font-mono); font-size: 0.75rem; }
 
 /* TEAM */
 .team-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-bottom: 3.5rem; }
@@ -377,48 +302,33 @@ body::before {
 .team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; }
 .member {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 1.8rem 1rem; text-align: center; transition: all 0.35s;
-  position: relative; overflow: hidden;
+  padding: 1.8rem 1rem; text-align: center; transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+  position: relative; overflow: hidden; transform-style: preserve-3d; perspective: 800px;
 }
-.member:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-.member::before {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+.member:hover { border-color: var(--border-glow); transform: translateY(-6px); box-shadow: 0 15px 50px rgba(0,0,0,0.25), 0 0 20px var(--red-glow); }
+.member::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
   background: linear-gradient(90deg, transparent, var(--red), transparent);
-  opacity: 0; transition: opacity 0.3s;
+  transform: scaleX(0); transition: transform 0.4s;
 }
-.member:hover::before { opacity: 1; }
+.member:hover::after { transform: scaleX(1); }
 .member-avatar {
-  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1rem;
-  overflow: hidden; border: 2px solid var(--border); transition: all 0.35s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  width: 76px; height: 76px; border-radius: 50%; margin: 0 auto 1rem;
+  overflow: hidden; border: 2px solid var(--border); transition: all 0.4s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-.member:hover .member-avatar { border-color: var(--red); box-shadow: 0 0 20px rgba(255,42,42,0.15); }
+.member:hover .member-avatar { border-color: var(--red); box-shadow: 0 0 25px rgba(255,42,42,0.2), 0 8px 20px rgba(0,0,0,0.3); transform: scale(1.05); }
 .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.member-pseudo { font-family: var(--font-mono); font-size: 0.78rem; color: var(--white); font-weight: 700; }
+.member-pseudo { font-family: var(--font-mono); font-size: 0.8rem; color: var(--white); font-weight: 700; }
 .member-name { font-size: 0.72rem; color: var(--fg-muted); margin-top: 0.25rem; }
-.member-role {
-  font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--red-soft); margin-top: 0.5rem;
-  display: inline-flex; padding: 0.2em 0.6em; border-radius: 100px;
-  background: var(--red-glow); border: 1px solid var(--border-glow);
-}
+.member-role { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-soft); margin-top: 0.5rem; display: inline-flex; padding: 0.2em 0.6em; border-radius: 100px; background: var(--red-glow); border: 1px solid var(--border-glow); }
 @media (max-width: 1000px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 600px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* CTA */
-.cta-section {
-  text-align: center; padding-block: 8rem; position: relative; overflow: hidden;
-}
-.cta-section::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 70% at 50% 50%, var(--red-glow-strong) 0%, transparent 70%);
-  pointer-events: none;
-}
-.cta-section h2 {
-  font-family: var(--font-display); font-size: clamp(2.5rem, 6.5vw, 4.2rem);
-  font-weight: 900; color: var(--white); margin: 0 0 0.6rem; position: relative;
-  letter-spacing: -0.02em;
-}
+.cta-section { text-align: center; padding-block: 8rem; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 50%, var(--red-glow-strong) 0%, transparent 70%); pointer-events: none; }
+.cta-section h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 6.5vw, 4.2rem); font-weight: 900; color: var(--white); margin: 0 0 0.6rem; position: relative; letter-spacing: -0.02em; }
 .cta-section h2 em { font-style: normal; color: var(--red); }
 .cta-section p { color: var(--fg-muted); max-width: 520px; margin: 0 auto 2.5rem; font-size: 1rem; position: relative; line-height: 1.7; }
 .cta-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; position: relative; }
@@ -432,18 +342,10 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 .foot-nav a { font-size: 0.75rem; color: var(--fg-muted); transition: color 0.2s; }
 .foot-nav a:hover { color: var(--white); }
 .foot-socials { display: flex; gap: 0.6rem; justify-content: flex-end; }
-.foot-social {
-  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center; color: var(--fg-muted);
-  transition: all 0.25s;
-}
+.foot-social { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--fg-muted); transition: all 0.25s; }
 .foot-social:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
 .foot-social svg { width: 15px; height: 15px; fill: currentColor; }
-.foot-bottom {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
-  font-size: 0.62rem; color: var(--fg-dim); font-family: var(--font-mono); letter-spacing: 0.06em;
-}
+.foot-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.62rem; color: var(--fg-dim); font-family: var(--font-mono); letter-spacing: 0.06em; }
 @media (max-width: 700px) {
   .foot-grid { grid-template-columns: 1fr; text-align: center; }
   .foot-socials { justify-content: center; }
@@ -451,54 +353,27 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 }
 
 /* MODAL */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.75); z-index: 200; align-items: center;
-  justify-content: center; backdrop-filter: blur(8px);
-}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
 .modal-overlay.active { display: flex; }
-.modal {
-  background: var(--bg-elevated); border: 1px solid var(--border);
-  border-radius: var(--radius); width: 100%; max-width: 420px;
-  padding: 2.5rem 2rem; margin: 1rem; position: relative;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-}
+.modal { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 420px; padding: 2.5rem 2rem; margin: 1rem; position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.5); animation: modalIn 0.3s cubic-bezier(0.19,1,0.22,1); }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: none; } }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-dim); font-size: 1.3rem; cursor: pointer; transition: color 0.2s; }
 .modal-close:hover { color: var(--white); }
 .modal h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--white); margin: 0 0 0.3rem; }
 .modal .subtitle { font-size: 0.85rem; color: var(--fg-muted); margin-bottom: 1.5rem; }
 .form-group { margin-bottom: 1rem; }
-.form-group label {
-  display: block; font-family: var(--font-mono); font-size: 0.62rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem;
-}
-.form-group input, .form-group textarea, .form-group select {
-  width: 100%; padding: 0.65rem 0.9rem; background: var(--bg);
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  color: var(--white); font-family: var(--font-body); font-size: 0.9rem;
-  outline: none; transition: border-color 0.25s;
-}
+.form-group label { display: block; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.65rem 0.9rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--white); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: all 0.25s; }
 .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-glow); }
 .form-group textarea { min-height: 220px; resize: vertical; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.7; }
 .form-error { font-family: var(--font-mono); font-size: 0.68rem; color: var(--red); margin-top: 0.3rem; }
 .editor-toolbar { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
-.editor-toolbar button {
-  font-family: var(--font-mono); font-size: 0.62rem; padding: 0.35em 0.8em;
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--fg-muted);
-  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; gap: 0.3em;
-}
+.editor-toolbar button { font-family: var(--font-mono); font-size: 0.62rem; padding: 0.35em 0.8em; background: var(--bg-card); border: 1px solid var(--border); color: var(--fg-muted); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3em; }
 .editor-toolbar button:hover { border-color: var(--red); color: var(--white); }
 .editor-toolbar button.uploading { opacity: 0.5; pointer-events: none; }
 .editor-drop-zone { position: relative; }
 .editor-drop-zone.drag-over textarea { border-color: var(--red); background: var(--red-glow); }
-.form-submit {
-  width: 100%; padding: 0.75rem; background: var(--red); color: #fff;
-  border: none; border-radius: var(--radius-sm); font-family: var(--font-mono);
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  cursor: pointer; transition: all 0.25s; margin-top: 0.5rem;
-  box-shadow: 0 0 16px rgba(255,42,42,0.2);
-}
+.form-submit { width: 100%; padding: 0.75rem; background: var(--red); color: #fff; border: none; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: all 0.25s; margin-top: 0.5rem; box-shadow: 0 0 16px rgba(255,42,42,0.2); }
 .form-submit:hover { background: var(--red-soft); box-shadow: 0 0 24px rgba(255,42,42,0.35); }
 .form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 .modal-switch { text-align: center; margin-top: 1.2rem; font-size: 0.8rem; color: var(--fg-muted); }
@@ -512,7 +387,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 /* WRITEUP VIEWER */
 .writeup-view { max-width: 760px; margin: 0 auto; }
-.writeup-view h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--white); margin: 0 0 0.8rem; line-height: 1.12; letter-spacing: -0.02em; }
+.writeup-view h1 { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.6rem); font-weight: 800; color: var(--white); margin: 0 0 0.8rem; line-height: 1.12; letter-spacing: -0.02em; }
 .writeup-view-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-dim); margin-bottom: 2.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .writeup-view-body { font-size: 0.95rem; line-height: 1.85; color: var(--fg); }
 .writeup-view-body p { margin: 0 0 1.4rem; }
@@ -524,22 +399,19 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 .back-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; margin-bottom: 2rem; transition: color 0.2s; }
 .back-link:hover { color: var(--white); }
 
-/* FLOATING ORBS (decorative) */
-.orb {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  filter: blur(80px); opacity: 0.07; z-index: 0;
-}
-.orb-red { background: var(--red); width: 400px; height: 400px; }
-.orb-purple { background: var(--accent-purple); width: 300px; height: 300px; }
+/* SCANLINE */
+.scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.2; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px); }
 
-/* SCANLINE (subtle) */
-.scanlines {
-  position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.25;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.012) 2px, rgba(0,0,0,0.012) 4px);
+/* NOISE TEXTURE */
+.noise {
+  position: fixed; inset: 0; z-index: 998; pointer-events: none; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 256px 256px;
 }
 </style>
 
 <div class="scanlines"></div>
+<div class="noise"></div>
 
 <nav>
   <div class="nav-inner">
@@ -570,14 +442,8 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
     <div id="signInForm">
       <h2>Sign in</h2>
       <div class="subtitle" data-en="Welcome back, hunter." data-fr="Bon retour, hunter.">Welcome back, hunter.</div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="siEmail" placeholder="hunter@sh1ny.team">
-      </div>
-      <div class="form-group">
-        <label data-en="Password" data-fr="Mot de passe">Password</label>
-        <input type="password" id="siPassword">
-      </div>
+      <div class="form-group"><label>Email</label><input type="email" id="siEmail" placeholder="hunter@sh1ny.team"></div>
+      <div class="form-group"><label data-en="Password" data-fr="Mot de passe">Password</label><input type="password" id="siPassword"></div>
       <div class="form-error" id="siError"></div>
       <button class="form-submit" id="siBtn" onclick="doSignIn()" data-en="Sign in" data-fr="Se connecter">Sign in</button>
       <div class="modal-switch" data-en="New here? <a onclick='toggleAuth()'>Join the team</a>" data-fr="Nouveau ? <a onclick='toggleAuth()'>Rejoins l'equipe</a>">New here? <a onclick="toggleAuth()">Join the team</a></div>
@@ -585,22 +451,10 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
     <div id="signUpForm" hidden>
       <h2 data-en="Join the team" data-fr="Rejoins l'equipe">Join the team</h2>
       <div class="subtitle" data-en="Create your SH1NY HUNT3RS account." data-fr="Cree ton compte SH1NY HUNT3RS.">Create your SH1NY HUNT3RS account.</div>
-      <div class="form-group">
-        <label>Pseudo</label>
-        <input type="text" id="suPseudo" placeholder="H4CK3R">
-      </div>
-      <div class="form-group">
-        <label data-en="Full name" data-fr="Nom complet">Full name</label>
-        <input type="text" id="suName" placeholder="LASTNAME Firstname">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="suEmail" placeholder="hunter@sh1ny.team">
-      </div>
-      <div class="form-group">
-        <label data-en="Password" data-fr="Mot de passe">Password</label>
-        <input type="password" id="suPassword" placeholder="Min. 6 characters">
-      </div>
+      <div class="form-group"><label>Pseudo</label><input type="text" id="suPseudo" placeholder="H4CK3R"></div>
+      <div class="form-group"><label data-en="Full name" data-fr="Nom complet">Full name</label><input type="text" id="suName" placeholder="LASTNAME Firstname"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="suEmail" placeholder="hunter@sh1ny.team"></div>
+      <div class="form-group"><label data-en="Password" data-fr="Mot de passe">Password</label><input type="password" id="suPassword" placeholder="Min. 6 characters"></div>
       <div class="form-error" id="suError"></div>
       <button class="form-submit" id="suBtn" onclick="doSignUp()" data-en="Create account" data-fr="Creer le compte">Create account</button>
       <div class="modal-switch" data-en="Already a member? <a onclick='toggleAuth()'>Sign in</a>" data-fr="Deja membre ? <a onclick='toggleAuth()'>Se connecter</a>">Already a member? <a onclick="toggleAuth()">Sign in</a></div>
@@ -613,17 +467,14 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid-anim"></div>
-  <div class="orb orb-red" style="top:-15%;left:-5%"></div>
-  <div class="orb orb-purple" style="bottom:10%;right:-8%"></div>
+  <canvas id="heroCanvas"></canvas>
   <div class="container">
     <div class="hero-layout">
       <div class="hero-content">
         <div class="hero-badge"><span class="dot"></span> Cybersecurity Collective</div>
         <h1 class="hero-title">
-          <span class="hero-name">SH1NY HUNT3RS</span>
-          <span data-en="How things work and what happens when they <em>don't.</em>" data-fr="Comment les choses fonctionnent et ce qui arrive quand elles <em>ne marchent plus.</em>">How things work and what happens when they <em>don't.</em></span>
+          <span class="hero-name" id="heroName">SH1NY HUNT3RS</span>
+          <span id="heroHeadline" data-en="How things work and what happens when they <em>don't.</em>" data-fr="Comment les choses fonctionnent et ce qui arrive quand elles <em>ne marchent plus.</em>">How things work and what happens when they <em>don't.</em></span>
         </h1>
         <p class="hero-sub" data-en="Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see." data-fr="Hacking, competitions CTF et recherche de vulnerabilites. Une communaute beninoise qui traque ce que les autres ne voient pas.">Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see.</p>
         <div class="hero-btns">
@@ -631,21 +482,13 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
           <a href="#contact" class="btn btn-outline" data-en="Join the team ↗" data-fr="Rejoindre l'equipe ↗">Join the team ↗</a>
         </div>
       </div>
-      <div class="hero-terminal-wrap">
-        <div class="terminal">
+      <div>
+        <div class="terminal" id="heroTerminal">
           <div class="terminal-bar">
             <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">sh1ny@hunt3rs ~ bash</span>
           </div>
-          <div class="terminal-body" id="termBody">
-            <div><span class="prompt">$</span> <span class="cmd">whoami</span></div>
-            <div class="out" data-en="CTF team &amp; security research collective" data-fr="equipe CTF &amp; collectif de recherche en securite">CTF team &amp; security research collective</div>
-            <div><span class="prompt">$</span> <span class="cmd">cat mission.txt</span></div>
-            <div class="out" data-en="hack · compete · learn · repeat" data-fr="hacker · competir · apprendre · recommencer">hack · compete · learn · repeat</div>
-            <div><span class="prompt">$</span> <span class="cmd">cat location.txt</span></div>
-            <div class="out">Cotonou, Benin 🇧🇯</div>
-            <div><span class="prompt">$</span> <span class="cursor"></span></div>
-          </div>
+          <div class="terminal-body" id="termBody"></div>
         </div>
       </div>
     </div>
@@ -654,35 +497,21 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 <!-- STATS -->
 <div class="container">
-  <div class="stats-strip reveal">
-    <div class="stat-item">
-      <div class="stat-num">10</div>
-      <div class="stat-label" data-en="Members" data-fr="Membres">Members</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">115+</div>
-      <div class="stat-label" data-en="CTF Competitions" data-fr="Competitions CTF">CTF Competitions</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">2x</div>
-      <div class="stat-label" data-en="National Champions" data-fr="Champions nationaux">National Champions</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">10+</div>
-      <div class="stat-label" data-en="Domains covered" data-fr="Domaines couverts">Domains covered</div>
-    </div>
+  <div class="stats-strip" id="statsStrip">
+    <div class="stat-item"><div class="stat-num" data-count="10">0</div><div class="stat-label" data-en="Members" data-fr="Membres">Members</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="115" data-suffix="+">0</div><div class="stat-label" data-en="CTF Competitions" data-fr="Competitions CTF">CTF Competitions</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="2" data-suffix="x">0</div><div class="stat-label" data-en="National Champions" data-fr="Champions nationaux">National Champions</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="10" data-suffix="+">0</div><div class="stat-label" data-en="Domains covered" data-fr="Domaines couverts">Domains covered</div></div>
   </div>
 </div>
 
 <!-- GOALS / ABOUT -->
 <section class="section" id="about">
   <div class="container">
-    <div class="reveal">
-      <div class="eyebrow" data-en="What we do" data-fr="Ce qu'on fait">What we do</div>
-      <h2 class="section-title" data-en="Break systems. Build skills. Represent Benin." data-fr="Casser des systemes. Monter en competences. Representer le Benin.">Break systems. Build skills. Represent Benin.</h2>
-    </div>
+    <div class="eyebrow" data-en="What we do" data-fr="Ce qu'on fait">What we do</div>
+    <h2 class="section-title" data-en="Break systems. Build skills. Represent Benin." data-fr="Casser des systemes. Monter en competences. Representer le Benin.">Break systems. Build skills. Represent Benin.</h2>
     <div class="goals-grid">
-      <div class="goal-card reveal">
+      <div class="goal-card">
         <div class="goal-num">01</div>
         <div class="goal-icon">&#128274;</div>
         <div class="goal-tag" data-en="HACK" data-fr="HACKER">HACK</div>
@@ -690,7 +519,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
         <p data-en="Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail." data-fr="Explorer les systemes, trouver les failles, exploiter les vulnerabilites. On apprend en cassant les choses et en comprenant pourquoi elles echouent.">Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail.</p>
         <a href="#achievements" class="goal-link" data-en="See our results ↗" data-fr="Voir nos resultats ↗">See our results ↗</a>
       </div>
-      <div class="goal-card reveal">
+      <div class="goal-card">
         <div class="goal-num">02</div>
         <div class="goal-icon">&#127942;</div>
         <div class="goal-tag" data-en="COMPETE" data-fr="COMPETIR">COMPETE</div>
@@ -698,7 +527,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
         <p data-en="CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round." data-fr="Les competitions CTF nous poussent a resoudre des problemes complexes rapidement. On compete au niveau national et international.">CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round.</p>
         <a onclick="showView('writeups-list');return false" class="goal-link" style="cursor:pointer">Writeups ↗</a>
       </div>
-      <div class="goal-card reveal">
+      <div class="goal-card">
         <div class="goal-num">03</div>
         <div class="goal-icon">&#128218;</div>
         <div class="goal-tag" data-en="SHARE" data-fr="PARTAGER">SHARE</div>
@@ -707,7 +536,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
         <a href="#team" class="goal-link" data-en="Meet the team ↗" data-fr="L'equipe ↗">Meet the team ↗</a>
       </div>
     </div>
-    <div class="domains reveal">
+    <div class="domains">
       <div class="domains-label" data-en="Our fields" data-fr="Nos domaines">Our fields</div>
       <div class="domain-tags">
         <span class="domain-tag">Web</span><span class="domain-tag">Pwn</span><span class="domain-tag">Reverse</span><span class="domain-tag">Crypto</span><span class="domain-tag">Forensics</span><span class="domain-tag">OSINT</span><span class="domain-tag">Hardware</span><span class="domain-tag">Cloud</span><span class="domain-tag">AI / ML</span><span class="domain-tag">Misc</span>
@@ -721,35 +550,24 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 <!-- ACHIEVEMENTS -->
 <section class="section" id="achievements">
   <div class="container">
-    <div class="reveal">
-      <div class="eyebrow">scoreboard.log</div>
-      <h2 class="section-title" data-en="Our Achievements" data-fr="Nos resultats">Our Achievements</h2>
-    </div>
+    <div class="eyebrow">scoreboard.log</div>
+    <h2 class="section-title" data-en="Our Achievements" data-fr="Nos resultats">Our Achievements</h2>
     <div class="achieve-cards">
-      <div class="achieve-card gold reveal">
+      <div class="achieve-card gold">
         <div class="achieve-rank gold">#1</div>
-        <div class="achieve-info">
-          <div class="achieve-name">HackerLab 2026</div>
-          <div class="achieve-type">CTF · Finale nationale</div>
-        </div>
+        <div class="achieve-info"><div class="achieve-name">HackerLab 2026</div><div class="achieve-type">CTF · Finale nationale</div></div>
         <div class="achieve-year">2026</div>
         <a class="achieve-link" href="https://ctf.hackerlab.bj/scoreboard" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
       </div>
-      <div class="achieve-card gold reveal">
+      <div class="achieve-card gold">
         <div class="achieve-rank gold">#1</div>
-        <div class="achieve-info">
-          <div class="achieve-name">Qualifs HackerLab 2026</div>
-          <div class="achieve-type">CTF · Qualifications</div>
-        </div>
+        <div class="achieve-info"><div class="achieve-name">Qualifs HackerLab 2026</div><div class="achieve-type">CTF · Qualifications</div></div>
         <div class="achieve-year">2026</div>
         <a class="achieve-link" href="https://asin.bj/article/75/hackerlab-2026-equipes-qualifiees/" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
       </div>
-      <div class="achieve-card silver reveal">
+      <div class="achieve-card silver">
         <div class="achieve-rank silver">#2</div>
-        <div class="achieve-info">
-          <div class="achieve-name">Epihack Finale 2026</div>
-          <div class="achieve-type">CTF · Finale</div>
-        </div>
+        <div class="achieve-info"><div class="achieve-name">Epihack Finale 2026</div><div class="achieve-type">CTF · Finale</div></div>
         <div class="achieve-year">2026</div>
         <a class="achieve-link" href="https://epihack.site/" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
       </div>
@@ -759,13 +577,11 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 <hr class="divider">
 
-<!-- WRITEUPS (home preview) -->
+<!-- WRITEUPS -->
 <section class="section" id="writeups">
   <div class="container">
-    <div class="reveal">
-      <div class="eyebrow">knowledge.base</div>
-      <h2 class="section-title">Writeups</h2>
-    </div>
+    <div class="eyebrow">knowledge.base</div>
+    <h2 class="section-title">Writeups</h2>
     <div id="homeWriteups"></div>
   </div>
 </section>
@@ -775,67 +591,24 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 <!-- TEAM -->
 <section class="section" id="team">
   <div class="container">
-    <div class="reveal">
-      <div class="eyebrow" data-en="The Hunters" data-fr="Les Hunters">The Hunters</div>
-      <div class="team-intro">
-        <h2 class="section-title" data-en="Meet the Team" data-fr="L'equipe">Meet the Team</h2>
-        <div class="team-intro-text">
-          <p data-en="The people behind the flags, the exploits, and the late-night debugging sessions." data-fr="Ceux derriere les flags, les exploits et les sessions de debug jusqu'au bout de la nuit.">The people behind the flags, the exploits, and the late-night debugging sessions.</p>
-        </div>
+    <div class="eyebrow" data-en="The Hunters" data-fr="Les Hunters">The Hunters</div>
+    <div class="team-intro">
+      <h2 class="section-title" data-en="Meet the Team" data-fr="L'equipe">Meet the Team</h2>
+      <div class="team-intro-text">
+        <p data-en="The people behind the flags, the exploits, and the late-night debugging sessions." data-fr="Ceux derriere les flags, les exploits et les sessions de debug jusqu'au bout de la nuit.">The people behind the flags, the exploits, and the late-night debugging sessions.</p>
       </div>
     </div>
     <div class="team-grid">
-      <div class="member reveal">
-        <div class="member-avatar"><img src="unp4tch3.webp" alt="UNP4TCH3D"></div>
-        <div class="member-pseudo">UNP4TCH3D</div>
-        <div class="member-name">ADANHOUNDJI Eliel Fresnel</div>
-        <div class="member-role">Founder</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div>
-        <div class="member-pseudo">K1LLS3VR4Q</div>
-        <div class="member-name">TOGBEDJI Daziano</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div>
-        <div class="member-pseudo">Le_Geek</div>
-        <div class="member-name">AGOUNLOYE Amir</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div>
-        <div class="member-pseudo">I_Am_Atomic</div>
-        <div class="member-name">AHOMAGNON Aurel</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div>
-        <div class="member-pseudo">Josi_hack</div>
-        <div class="member-name">BATONON Josias</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div>
-        <div class="member-pseudo">cbk_667</div>
-        <div class="member-name">AZOMBADE Frejus</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div>
-        <div class="member-pseudo">K0BR4</div>
-        <div class="member-name">BABALOLA Dimitri</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div>
-        <div class="member-pseudo">Mr_Nobody</div>
-        <div class="member-name">LOKO HADJIHOU David</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div>
-        <div class="member-pseudo">Hakim lyons</div>
-        <div class="member-name">GBETOHO Jose</div>
-      </div>
-      <div class="member reveal">
-        <div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div>
-        <div class="member-pseudo">Ryuk_kira</div>
-        <div class="member-name">GNONLONFIN Frankel</div>
-      </div>
+      <div class="member"><div class="member-avatar"><img src="unp4tch3.webp" alt="UNP4TCH3D"></div><div class="member-pseudo">UNP4TCH3D</div><div class="member-name">ADANHOUNDJI Eliel Fresnel</div><div class="member-role">Founder</div></div>
+      <div class="member"><div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div><div class="member-pseudo">K1LLS3VR4Q</div><div class="member-name">TOGBEDJI Daziano</div></div>
+      <div class="member"><div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div><div class="member-pseudo">Le_Geek</div><div class="member-name">AGOUNLOYE Amir</div></div>
+      <div class="member"><div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div><div class="member-pseudo">I_Am_Atomic</div><div class="member-name">AHOMAGNON Aurel</div></div>
+      <div class="member"><div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div><div class="member-pseudo">Josi_hack</div><div class="member-name">BATONON Josias</div></div>
+      <div class="member"><div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div><div class="member-pseudo">cbk_667</div><div class="member-name">AZOMBADE Frejus</div></div>
+      <div class="member"><div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div><div class="member-pseudo">K0BR4</div><div class="member-name">BABALOLA Dimitri</div></div>
+      <div class="member"><div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div><div class="member-pseudo">Mr_Nobody</div><div class="member-name">LOKO HADJIHOU David</div></div>
+      <div class="member"><div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div><div class="member-pseudo">Hakim lyons</div><div class="member-name">GBETOHO Jose</div></div>
+      <div class="member"><div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div><div class="member-pseudo">Ryuk_kira</div><div class="member-name">GNONLONFIN Frankel</div></div>
     </div>
   </div>
 </section>
@@ -845,14 +618,12 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 <!-- CTA -->
 <section class="cta-section" id="contact">
   <div class="container">
-    <div class="reveal">
-      <div class="eyebrow" style="justify-content:center" data-en="Join the hunt" data-fr="Rejoins la chasse">Join the hunt</div>
-      <h2 data-en="Join the <em>team.</em>" data-fr="Rejoins l'<em>equipe.</em>">Join the <em>team.</em></h2>
-      <p data-en="Learn with us, compete with us, and help put Benin on the global CTF map." data-fr="Apprends avec nous, compete avec nous et aide a mettre le Benin sur la carte mondiale du CTF.">Learn with us, compete with us, and help put Benin on the global CTF map.</p>
-      <div class="cta-btns">
-        <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="btn btn-red">GitHub ↗</a>
-        <button class="btn btn-outline" onclick="openModal('signup')" data-en="Create account" data-fr="Creer un compte">Create account</button>
-      </div>
+    <div class="eyebrow" style="justify-content:center" data-en="Join the hunt" data-fr="Rejoins la chasse">Join the hunt</div>
+    <h2 data-en="Join the <em>team.</em>" data-fr="Rejoins l'<em>equipe.</em>">Join the <em>team.</em></h2>
+    <p data-en="Learn with us, compete with us, and help put Benin on the global CTF map." data-fr="Apprends avec nous, compete avec nous et aide a mettre le Benin sur la carte mondiale du CTF.">Learn with us, compete with us, and help put Benin on the global CTF map.</p>
+    <div class="cta-btns">
+      <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="btn btn-red">GitHub ↗</a>
+      <button class="btn btn-outline" onclick="openModal('signup')" data-en="Create account" data-fr="Creer un compte">Create account</button>
     </div>
   </div>
 </section>
@@ -876,11 +647,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 <!-- WRITEUP VIEWER -->
 <div id="view-writeup" hidden>
-  <section class="section">
-    <div class="container">
-      <div class="writeup-view" id="writeupContent"></div>
-    </div>
-  </section>
+  <section class="section"><div class="container"><div class="writeup-view" id="writeupContent"></div></div></section>
 </div>
 
 <!-- EDITOR VIEW -->
@@ -890,17 +657,10 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
       <a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a>
       <div class="eyebrow" data-en="Write" data-fr="Ecrire">Write</div>
       <h2 class="section-title" id="editorTitle" data-en="New Writeup" data-fr="Nouveau writeup">New Writeup</h2>
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" id="edTitle" placeholder="HackerLab 2026 : Web Challenge XSS">
-      </div>
+      <div class="form-group"><label>Title</label><input type="text" id="edTitle" placeholder="HackerLab 2026 : Web Challenge XSS"></div>
       <div class="form-group">
         <label data-en="Category" data-fr="Categorie">Category</label>
-        <select id="edCat">
-          <option value="web">Web</option><option value="pwn">Pwn</option><option value="reverse">Reverse</option>
-          <option value="crypto">Crypto</option><option value="forensics">Forensics</option><option value="osint">OSINT</option>
-          <option value="misc" selected>Misc</option>
-        </select>
+        <select id="edCat"><option value="web">Web</option><option value="pwn">Pwn</option><option value="reverse">Reverse</option><option value="crypto">Crypto</option><option value="forensics">Forensics</option><option value="osint">OSINT</option><option value="misc" selected>Misc</option></select>
       </div>
       <div class="form-group">
         <label data-en="Content (Markdown)" data-fr="Contenu (Markdown)">Content (Markdown)</label>
@@ -928,10 +688,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
     <div class="container">
       <div class="eyebrow">dashboard</div>
       <div class="dash-header">
-        <div>
-          <h2 class="section-title" style="margin-bottom:0">Dashboard</h2>
-          <div class="dash-user" id="dashUser"></div>
-        </div>
+        <div><h2 class="section-title" style="margin-bottom:0">Dashboard</h2><div class="dash-user" id="dashUser"></div></div>
         <div class="dash-actions">
           <button class="btn btn-red" onclick="showView('editor')" data-en="New writeup" data-fr="Nouveau writeup">New writeup</button>
           <button class="btn btn-outline" onclick="doSignOut()" data-en="Sign out" data-fr="Deconnexion">Sign out</button>
@@ -970,6 +727,191 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 </footer>
 
 <script>
+// ===== PARTICLE CANVAS =====
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = { x: -1000, y: -1000 };
+  function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+  canvas.addEventListener('mousemove', e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  canvas.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+  const count = Math.min(80, Math.floor(window.innerWidth / 15));
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.5
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const isDark = getComputedStyle(document.documentElement).getPropertyValue('color-scheme').trim() !== 'light';
+    const lineColor = isDark ? 'rgba(255,42,42,' : 'rgba(220,38,38,';
+    const dotColor = isDark ? 'rgba(255,42,42,0.6)' : 'rgba(220,38,38,0.4)';
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      const dx = mouse.x - p.x, dy = mouse.y - p.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150) { p.x -= dx * 0.01; p.y -= dy * 0.01; }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = dotColor;
+      ctx.fill();
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const d = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (d < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = lineColor + (1 - d / 120) * 0.15 + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== GSAP HERO ANIMATION =====
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+heroTL
+  .to('.hero-badge', { opacity: 1, y: 0, duration: 0.6 }, 0.2)
+  .from('.hero-name', { opacity: 0, x: -30, duration: 0.5 }, 0.4)
+  .from('#heroHeadline', { opacity: 0, y: 30, duration: 0.7 }, 0.6)
+  .to('.hero-sub', { opacity: 1, y: 0, duration: 0.6 }, 0.9)
+  .to('.hero-btns', { opacity: 1, y: 0, duration: 0.5 }, 1.1)
+  .to('.terminal', { opacity: 1, y: 0, rotateX: 0, duration: 0.8, ease: 'back.out(1.5)' }, 0.7);
+
+// Typing terminal
+(function() {
+  const lines = [
+    { type: 'cmd', prompt: '$ ', text: 'whoami' },
+    { type: 'out', text: 'CTF team & security research collective' },
+    { type: 'cmd', prompt: '$ ', text: 'cat mission.txt' },
+    { type: 'out', text: 'hack · compete · learn · repeat' },
+    { type: 'cmd', prompt: '$ ', text: 'cat location.txt' },
+    { type: 'out', text: 'Cotonou, Benin 🇧🇯' },
+    { type: 'cmd', prompt: '$ ', text: '' }
+  ];
+  const body = document.getElementById('termBody');
+  if (!body) return;
+  let lineIdx = 0;
+
+  function typeLine() {
+    if (lineIdx >= lines.length) {
+      const cursorDiv = document.createElement('div');
+      cursorDiv.innerHTML = '<span class="prompt">$</span> <span class="cursor"></span>';
+      body.appendChild(cursorDiv);
+      return;
+    }
+    const l = lines[lineIdx];
+    const div = document.createElement('div');
+
+    if (l.type === 'cmd') {
+      div.innerHTML = '<span class="prompt">' + l.prompt + '</span><span class="cmd"></span>';
+      body.appendChild(div);
+      const cmdSpan = div.querySelector('.cmd');
+      let i = 0;
+      const timer = setInterval(() => {
+        if (i < l.text.length) { cmdSpan.textContent += l.text[i]; i++; }
+        else { clearInterval(timer); lineIdx++; setTimeout(typeLine, 100); }
+      }, 40);
+    } else {
+      div.className = 'out';
+      div.textContent = l.text;
+      div.style.opacity = '0';
+      body.appendChild(div);
+      gsap.to(div, { opacity: 1, duration: 0.3, onComplete: () => { lineIdx++; setTimeout(typeLine, 200); } });
+    }
+  }
+  setTimeout(typeLine, 1200);
+})();
+
+// Scroll-triggered sections
+gsap.utils.toArray('.section, .stats-strip').forEach(el => {
+  gsap.from(el, {
+    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+    opacity: 0, y: 50, duration: 0.8, ease: 'power2.out'
+  });
+});
+
+// Goal cards stagger
+gsap.utils.toArray('.goal-card').forEach((card, i) => {
+  gsap.from(card, {
+    scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+    opacity: 0, y: 40, duration: 0.6, delay: i * 0.15, ease: 'power2.out'
+  });
+});
+
+// Achieve cards stagger
+gsap.utils.toArray('.achieve-card').forEach((card, i) => {
+  gsap.from(card, {
+    scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+    opacity: 0, x: -30, duration: 0.5, delay: i * 0.12, ease: 'power2.out'
+  });
+});
+
+// Team members stagger
+gsap.utils.toArray('.member').forEach((m, i) => {
+  gsap.from(m, {
+    scrollTrigger: { trigger: m, start: 'top 90%', once: true },
+    opacity: 0, y: 30, scale: 0.95, duration: 0.5, delay: i * 0.06, ease: 'back.out(1.4)'
+  });
+});
+
+// Domain tags stagger
+gsap.utils.toArray('.domain-tag').forEach((tag, i) => {
+  gsap.from(tag, {
+    scrollTrigger: { trigger: tag, start: 'top 90%', once: true },
+    opacity: 0, scale: 0.8, duration: 0.3, delay: i * 0.05, ease: 'back.out(2)'
+  });
+});
+
+// ===== ANIMATED COUNTERS =====
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.stat-num').forEach(num => {
+      const target = parseInt(num.dataset.count);
+      const suffix = num.dataset.suffix || '';
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: target, duration: 1.5, ease: 'power2.out',
+        onUpdate: () => { num.textContent = Math.round(obj.val) + suffix; }
+      });
+    });
+    statsObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const ss = document.getElementById('statsStrip');
+if (ss) statsObs.observe(ss);
+
+// ===== CARD MOUSE GLOW =====
+document.querySelectorAll('.goal-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+
+// ===== SUPABASE + APP LOGIC =====
 const SUPABASE_URL = 'https://mhyckmtdqwrfhddtoyok.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_jcOLmuZG6mYy7tY7D3JO_Q_L1nvFO0U';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1007,10 +949,7 @@ langBtn.addEventListener('click', () => setLang(currentLang === 'en' ? 'fr' : 'e
 // VIEWS
 const views = ['home','writeups-list','writeup','editor','dashboard'];
 function showView(name) {
-  views.forEach(v => {
-    const el = document.getElementById('view-' + v);
-    if (el) el.hidden = (v !== name);
-  });
+  views.forEach(v => { const el = document.getElementById('view-' + v); if (el) el.hidden = (v !== name); });
   window.scrollTo(0, 0);
   document.querySelector('.nav-links')?.classList.remove('open');
   if (name === 'writeups-list') loadWriteups();
@@ -1024,7 +963,7 @@ function showView(name) {
   }
 }
 
-// AUTH MODAL
+// AUTH
 function openModal(mode) {
   document.getElementById('authModal').classList.add('active');
   document.getElementById('signInForm').hidden = (mode === 'signup');
@@ -1033,29 +972,21 @@ function openModal(mode) {
   document.getElementById('suError').textContent = '';
 }
 function closeModal() { document.getElementById('authModal').classList.remove('active'); }
-function toggleAuth() {
-  const isSignUp = !document.getElementById('signUpForm').hidden;
-  openModal(isSignUp ? 'signin' : 'signup');
-}
+function toggleAuth() { const isSignUp = !document.getElementById('signUpForm').hidden; openModal(isSignUp ? 'signin' : 'signup'); }
 
-// SIGN IN
 async function doSignIn() {
-  const btn = document.getElementById('siBtn');
-  const err = document.getElementById('siError');
+  const btn = document.getElementById('siBtn'); const err = document.getElementById('siError');
   btn.disabled = true; err.textContent = '';
   const email = document.getElementById('siEmail').value.trim();
   const password = document.getElementById('siPassword').value;
   if (!email || !password) { err.textContent = 'Fill all fields'; btn.disabled = false; return; }
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) { err.textContent = error.message; btn.disabled = false; return; }
-  closeModal();
-  btn.disabled = false;
+  closeModal(); btn.disabled = false;
 }
 
-// SIGN UP
 async function doSignUp() {
-  const btn = document.getElementById('suBtn');
-  const err = document.getElementById('suError');
+  const btn = document.getElementById('suBtn'); const err = document.getElementById('suError');
   btn.disabled = true; err.textContent = '';
   const pseudo = document.getElementById('suPseudo').value.trim();
   const fullName = document.getElementById('suName').value.trim();
@@ -1063,19 +994,13 @@ async function doSignUp() {
   const password = document.getElementById('suPassword').value;
   if (!pseudo || !email || !password) { err.textContent = 'Fill all required fields'; btn.disabled = false; return; }
   if (password.length < 6) { err.textContent = 'Password: min. 6 characters'; btn.disabled = false; return; }
-  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { pseudo, full_name: fullName } } });
+  const { error } = await sb.auth.signUp({ email, password, options: { data: { pseudo, full_name: fullName } } });
   if (error) { err.textContent = error.message; btn.disabled = false; return; }
-  closeModal();
-  btn.disabled = false;
+  closeModal(); btn.disabled = false;
 }
 
-// SIGN OUT
-async function doSignOut() {
-  await sb.auth.signOut();
-  showView('home');
-}
+async function doSignOut() { await sb.auth.signOut(); showView('home'); }
 
-// AUTH STATE
 function updateNavAuth(user) {
   const el = document.getElementById('navAuth');
   if (user) {
@@ -1089,26 +1014,18 @@ function updateNavAuth(user) {
 
 sb.auth.onAuthStateChange(async (event, session) => {
   currentUser = session?.user || null;
-  if (currentUser) {
-    const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-    currentProfile = data;
-  } else {
-    currentProfile = null;
-  }
+  if (currentUser) { const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single(); currentProfile = data; }
+  else { currentProfile = null; }
   updateNavAuth(currentUser);
 });
-
 sb.auth.getSession().then(({ data }) => {
-  if (document.getElementById('navAuth').innerHTML === '') {
+  if (document.getElementById('navAuth').querySelector('.nav-cta')?.textContent === 'Sign in' || document.getElementById('navAuth').innerHTML === '') {
     currentUser = data?.session?.user || null;
-    if (currentUser) {
-      sb.from('profiles').select('*').eq('id', currentUser.id).single().then(({ data: p }) => { currentProfile = p; });
-    }
-    updateNavAuth(currentUser);
+    if (currentUser) { sb.from('profiles').select('*').eq('id', currentUser.id).single().then(({ data: p }) => { currentProfile = p; }); updateNavAuth(currentUser); }
   }
 });
 
-// MARKDOWN SIMPLE RENDERER
+// MARKDOWN
 function md(text) {
   if (!text) return '';
   let h = text
@@ -1120,102 +1037,46 @@ function md(text) {
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin:0.5em 0">');
   h = h.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => '<pre><code>' + code.trim() + '</code></pre>');
-  h = h.split(/\n\n+/).map(p => {
-    p = p.trim();
-    if (p.startsWith('<h') || p.startsWith('<pre') || p.startsWith('<img')) return p;
-    return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
-  }).join('\n');
+  h = h.split(/\n\n+/).map(p => { p = p.trim(); if (p.startsWith('<h') || p.startsWith('<pre') || p.startsWith('<img')) return p; return '<p>' + p.replace(/\n/g, '<br>') + '</p>'; }).join('\n');
   return h;
 }
+function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').substring(0, 80); }
 
-function slugify(text) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').substring(0, 80);
-}
-
-// LOAD WRITEUPS
+// WRITEUPS CRUD
 async function loadWriteups() {
-  const container = document.getElementById('writeupsList');
-  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  const c = document.getElementById('writeupsList');
+  c.innerHTML = '<div class="writeups-empty">Loading...</div>';
   const { data, error } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false });
-  if (error || !data?.length) {
-    container.innerHTML = '<div class="writeups-empty" data-' + currentLang + '="' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '">' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '</div>';
-    return;
-  }
-  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
-    <div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer">
-      <div class="writeup-card-cat">${w.category}</div>
-      <h3>${esc(w.title)}</h3>
-      <div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div>
-      <div class="writeup-card-excerpt">${esc(w.content.substring(0, 150))}...</div>
-    </div>
-  `).join('') + '</div>';
+  if (error || !data?.length) { c.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '</div>'; return; }
+  c.innerHTML = '<div class="writeup-grid">' + data.map(w => `<div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer"><div class="writeup-card-cat">${w.category}</div><h3>${esc(w.title)}</h3><div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div><div class="writeup-card-excerpt">${esc(w.content.substring(0, 150))}...</div></div>`).join('') + '</div>';
 }
 
-// LOAD HOME WRITEUPS
 async function loadHomeWriteups() {
-  const container = document.getElementById('homeWriteups');
+  const c = document.getElementById('homeWriteups');
   const { data } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false }).limit(3);
-  if (!data?.length) {
-    container.innerHTML = '<div class="writeups-empty" data-en="// Coming soon" data-fr="// Bientot disponible">// Coming soon</div>';
-    if (currentLang !== 'en') setLang(currentLang);
-    return;
-  }
-  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
-    <div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer">
-      <div class="writeup-card-cat">${w.category}</div>
-      <h3>${esc(w.title)}</h3>
-      <div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div>
-    </div>
-  `).join('') + '</div>';
+  if (!data?.length) { c.innerHTML = '<div class="writeups-empty" data-en="// Coming soon" data-fr="// Bientot disponible">// Coming soon</div>'; if (currentLang !== 'en') setLang(currentLang); return; }
+  c.innerHTML = '<div class="writeup-grid">' + data.map(w => `<div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer"><div class="writeup-card-cat">${w.category}</div><h3>${esc(w.title)}</h3><div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div></div>`).join('') + '</div>';
 }
 
-// VIEW SINGLE WRITEUP
 async function viewWriteup(id) {
   showView('writeup');
-  const container = document.getElementById('writeupContent');
-  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  const c = document.getElementById('writeupContent');
+  c.innerHTML = '<div class="writeups-empty">Loading...</div>';
   const { data } = await sb.from('writeups').select('*, profiles(pseudo)').eq('id', id).single();
-  if (!data) { container.innerHTML = 'Not found'; return; }
-  container.innerHTML = `
-    <a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a>
-    <div style="font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--red-soft);margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4em"><span style="width:4px;height:4px;border-radius:50%;background:var(--red);display:inline-block"></span> ${data.category}</div>
-    <h1>${esc(data.title)}</h1>
-    <div class="writeup-view-meta">
-      <span>${data.profiles?.pseudo || 'Anonymous'}</span>
-      <span>${new Date(data.created_at).toLocaleDateString()}</span>
-    </div>
-    <div class="writeup-view-body">${md(data.content)}</div>
-  `;
+  if (!data) { c.innerHTML = 'Not found'; return; }
+  c.innerHTML = `<a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a><div style="font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--red-soft);margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4em"><span style="width:4px;height:4px;border-radius:50%;background:var(--red);display:inline-block"></span> ${data.category}</div><h1>${esc(data.title)}</h1><div class="writeup-view-meta"><span>${data.profiles?.pseudo || 'Anonymous'}</span><span>${new Date(data.created_at).toLocaleDateString()}</span></div><div class="writeup-view-body">${md(data.content)}</div>`;
 }
 
-// DASHBOARD
 async function loadDashboard() {
   if (!currentUser) { openModal('signin'); showView('home'); return; }
-  const userEl = document.getElementById('dashUser');
-  userEl.innerHTML = currentProfile ? '<strong>' + esc(currentProfile.pseudo) + '</strong> &middot; ' + currentUser.email : currentUser.email;
-  const container = document.getElementById('myWriteups');
-  container.innerHTML = '<div class="writeups-empty">Loading...</div>';
+  document.getElementById('dashUser').innerHTML = currentProfile ? '<strong>' + esc(currentProfile.pseudo) + '</strong> &middot; ' + currentUser.email : currentUser.email;
+  const c = document.getElementById('myWriteups');
+  c.innerHTML = '<div class="writeups-empty">Loading...</div>';
   const { data } = await sb.from('writeups').select('*').eq('author_id', currentUser.id).order('created_at', { ascending: false });
-  if (!data?.length) {
-    container.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? 'Aucun writeup. Ecris ton premier !' : 'No writeups yet. Write your first one!') + '</div>';
-    return;
-  }
-  container.innerHTML = '<div class="writeup-grid">' + data.map(w => `
-    <div class="writeup-card">
-      <div style="display:flex;justify-content:space-between;align-items:start">
-        <div class="writeup-card-cat">${w.category} ${w.published ? '' : '&middot; DRAFT'}</div>
-        <div style="display:flex;gap:0.5rem">
-          <span style="cursor:pointer;font-size:0.68rem;color:var(--fg-muted);font-family:var(--font-mono)" onclick="editWriteup(${w.id})">Edit</span>
-          <span style="cursor:pointer;font-size:0.68rem;color:var(--red);font-family:var(--font-mono)" onclick="deleteWriteup(${w.id})">Delete</span>
-        </div>
-      </div>
-      <h3>${esc(w.title)}</h3>
-      <div class="writeup-card-meta">${new Date(w.created_at).toLocaleDateString()} ${w.published ? '' : '(draft)'}</div>
-    </div>
-  `).join('') + '</div>';
+  if (!data?.length) { c.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? 'Aucun writeup. Ecris ton premier !' : 'No writeups yet. Write your first one!') + '</div>'; return; }
+  c.innerHTML = '<div class="writeup-grid">' + data.map(w => `<div class="writeup-card"><div style="display:flex;justify-content:space-between;align-items:start"><div class="writeup-card-cat">${w.category} ${w.published ? '' : '&middot; DRAFT'}</div><div style="display:flex;gap:0.5rem"><span style="cursor:pointer;font-size:0.68rem;color:var(--fg-muted);font-family:var(--font-mono)" onclick="editWriteup(${w.id})">Edit</span><span style="cursor:pointer;font-size:0.68rem;color:var(--red);font-family:var(--font-mono)" onclick="deleteWriteup(${w.id})">Delete</span></div></div><h3>${esc(w.title)}</h3><div class="writeup-card-meta">${new Date(w.created_at).toLocaleDateString()} ${w.published ? '' : '(draft)'}</div></div>`).join('') + '</div>';
 }
 
-// SAVE WRITEUP
 async function saveWriteup(publish) {
   if (!currentUser) { openModal('signin'); return; }
   const title = document.getElementById('edTitle').value.trim();
@@ -1227,18 +1088,11 @@ async function saveWriteup(publish) {
   err.textContent = '';
   const slug = slugify(title) + '-' + Date.now().toString(36);
   const row = { title, content, category, slug, published: publish, author_id: currentUser.id, updated_at: new Date().toISOString() };
-  if (id) {
-    delete row.slug; delete row.author_id;
-    const { error } = await sb.from('writeups').update(row).eq('id', parseInt(id));
-    if (error) { err.textContent = error.message; return; }
-  } else {
-    const { error } = await sb.from('writeups').insert(row);
-    if (error) { err.textContent = error.message; return; }
-  }
+  if (id) { delete row.slug; delete row.author_id; const { error } = await sb.from('writeups').update(row).eq('id', parseInt(id)); if (error) { err.textContent = error.message; return; } }
+  else { const { error } = await sb.from('writeups').insert(row); if (error) { err.textContent = error.message; return; } }
   showView('dashboard');
 }
 
-// EDIT WRITEUP
 async function editWriteup(id) {
   const { data } = await sb.from('writeups').select('*').eq('id', id).single();
   if (!data) return;
@@ -1250,22 +1104,15 @@ async function editWriteup(id) {
   showView('editor');
 }
 
-// DELETE WRITEUP
-async function deleteWriteup(id) {
-  await sb.from('writeups').delete().eq('id', id);
-  loadDashboard();
-}
-
+async function deleteWriteup(id) { await sb.from('writeups').delete().eq('id', id); loadDashboard(); }
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 // IMAGE UPLOAD
 const STORAGE_BASE = SUPABASE_URL + '/storage/v1/object';
-
 function triggerImageUpload() {
   if (!currentUser) { document.getElementById('edError').textContent = 'You must be signed in to upload images'; return; }
   document.getElementById('imgFileInput').click();
 }
-
 async function uploadImage(file) {
   if (!currentUser) return null;
   if (!file.type.startsWith('image/')) return null;
@@ -1276,67 +1123,34 @@ async function uploadImage(file) {
     const session = await sb.auth.getSession();
     const token = session?.data?.session?.access_token;
     if (!token) { document.getElementById('edError').textContent = 'Session expired, please sign in again'; return null; }
-    const res = await fetch(STORAGE_BASE + '/writeup-images/' + name, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': file.type
-      },
-      body: file
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      document.getElementById('edError').textContent = 'Upload failed: ' + (err.message || res.statusText);
-      return null;
-    }
+    const res = await fetch(STORAGE_BASE + '/writeup-images/' + name, { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': file.type }, body: file });
+    if (!res.ok) { const err = await res.json().catch(() => ({})); document.getElementById('edError').textContent = 'Upload failed: ' + (err.message || res.statusText); return null; }
     return STORAGE_BASE + '/public/writeup-images/' + name;
-  } catch (e) {
-    document.getElementById('edError').textContent = 'Upload error: ' + e.message;
-    return null;
-  }
+  } catch (e) { document.getElementById('edError').textContent = 'Upload error: ' + e.message; return null; }
 }
-
 async function handleImageFiles(files) {
-  const btn = document.getElementById('imgUploadBtn');
-  const origText = btn.innerHTML;
-  btn.classList.add('uploading');
-  btn.innerHTML = '&#9203; Uploading...';
+  const btn = document.getElementById('imgUploadBtn'); const origText = btn.innerHTML;
+  btn.classList.add('uploading'); btn.innerHTML = '&#9203; Uploading...';
   document.getElementById('edError').textContent = '';
   const ta = document.getElementById('edContent');
-  for (const file of files) {
-    const url = await uploadImage(file);
-    if (url) {
-      const tag = `![${file.name}](${url})`;
-      const pos = ta.selectionStart;
-      ta.value = ta.value.substring(0, pos) + '\n' + tag + '\n' + ta.value.substring(pos);
-    }
-  }
-  btn.classList.remove('uploading');
-  btn.innerHTML = origText;
+  for (const file of files) { const url = await uploadImage(file); if (url) { const tag = `![${file.name}](${url})`; const pos = ta.selectionStart; ta.value = ta.value.substring(0, pos) + '\n' + tag + '\n' + ta.value.substring(pos); } }
+  btn.classList.remove('uploading'); btn.innerHTML = origText;
 }
-
 (function() {
-  const zone = document.getElementById('editorDropZone');
-  if (!zone) return;
+  const zone = document.getElementById('editorDropZone'); if (!zone) return;
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
   zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.classList.remove('drag-over');
-    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
-    if (files.length) handleImageFiles(files);
-  });
-  document.getElementById('edContent').addEventListener('paste', e => {
-    const files = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/'));
-    if (files.length) { e.preventDefault(); handleImageFiles(files); }
-  });
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/')); if (files.length) handleImageFiles(files); });
+  document.getElementById('edContent').addEventListener('paste', e => { const files = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/')); if (files.length) { e.preventDefault(); handleImageFiles(files); } });
 })();
 
-// SCROLL REVEAL
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1) { const t = document.querySelector(id); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+  });
+});
 
 // INIT
 loadHomeWriteups();
