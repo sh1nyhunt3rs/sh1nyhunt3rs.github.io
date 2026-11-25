@@ -734,11 +734,9 @@ async function doSignUp() {
   const password = document.getElementById('suPassword').value;
   if (!pseudo || !email || !password) { err.textContent = 'Fill all required fields'; btn.disabled = false; return; }
   if (password.length < 6) { err.textContent = 'Password: min. 6 characters'; btn.disabled = false; return; }
-  const { data, error } = await sb.auth.signUp({ email, password });
+  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { pseudo, full_name: fullName } } });
   if (error) { err.textContent = error.message; btn.disabled = false; return; }
-  if (data.user) {
-    await sb.from('profiles').insert({ id: data.user.id, pseudo, full_name: fullName, role: 'member' });
-  }
+  
   closeModal();
   btn.disabled = false;
 }
