@@ -1,201 +1,449 @@
 <title>SH1NY HUNT3RS</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800;900&display=swap">
+<meta name="description" content="SH1NY HUNT3RS — Benin's elite CTF team and cybersecurity research collective.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
 <style>
 :root {
-  --bg: #0a0a0a;
-  --bg-elevated: #111;
-  --fg: #d4d4d4;
-  --fg-muted: #888;
-  --fg-dim: #444;
-  --red: #e31e24;
-  --red-glow: rgba(227,30,36,0.12);
-  --red-dim: #8b1215;
-  --white: #f0f0f0;
-  --nav-bg: rgba(10,10,10,0.88);
-  --border: #1c1c1c;
-  --border-light: #252525;
-  --font-display: 'Outfit', system-ui, sans-serif;
+  --bg: #050508;
+  --bg-elevated: #0c0c12;
+  --bg-card: #0f0f17;
+  --bg-glass: rgba(15,15,23,0.72);
+  --fg: #c8c8d0;
+  --fg-muted: #6b6b80;
+  --fg-dim: #3a3a4a;
+  --red: #ff2a2a;
+  --red-soft: #ff4d4d;
+  --red-glow: rgba(255,42,42,0.08);
+  --red-glow-strong: rgba(255,42,42,0.18);
+  --accent-cyan: #00e5ff;
+  --accent-purple: #a855f7;
+  --white: #f0f0f5;
+  --nav-bg: rgba(5,5,8,0.82);
+  --border: #1a1a28;
+  --border-light: #22222f;
+  --border-glow: rgba(255,42,42,0.15);
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --radius-sm: 6px;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #f4f4f4; --bg-elevated: #fff; --fg: #2a2a2a; --fg-muted: #666; --fg-dim: #bbb;
-    --red: #c9191e; --red-glow: rgba(201,25,30,0.07); --red-dim: #e0b0b2; --white: #111;
-    --nav-bg: rgba(244,244,244,0.92); --border: #e0e0e0; --border-light: #eaeaea;
+    --bg: #f5f5f8; --bg-elevated: #fff; --bg-card: #fff; --bg-glass: rgba(255,255,255,0.78);
+    --fg: #2a2a35; --fg-muted: #6b6b80; --fg-dim: #bbb;
+    --red: #dc2626; --red-soft: #ef4444; --red-glow: rgba(220,38,38,0.06); --red-glow-strong: rgba(220,38,38,0.12);
+    --white: #111118; --nav-bg: rgba(245,245,248,0.88); --border: #e2e2ea; --border-light: #ececf0;
+    --border-glow: rgba(220,38,38,0.1);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
-  --bg: #f4f4f4; --bg-elevated: #fff; --fg: #2a2a2a; --fg-muted: #666; --fg-dim: #bbb;
-  --red: #c9191e; --red-glow: rgba(201,25,30,0.07); --red-dim: #e0b0b2; --white: #111;
-  --nav-bg: rgba(244,244,244,0.92); --border: #e0e0e0; --border-light: #eaeaea;
+  --bg: #f5f5f8; --bg-elevated: #fff; --bg-card: #fff; --bg-glass: rgba(255,255,255,0.78);
+  --fg: #2a2a35; --fg-muted: #6b6b80; --fg-dim: #bbb;
+  --red: #dc2626; --red-soft: #ef4444; --red-glow: rgba(220,38,38,0.06); --red-glow-strong: rgba(220,38,38,0.12);
+  --white: #111118; --nav-bg: rgba(245,245,248,0.88); --border: #e2e2ea; --border-light: #ececf0;
+  --border-glow: rgba(220,38,38,0.1);
   color-scheme: light;
 }
+
 body {
-  background: var(--bg); color: var(--fg); font-family: var(--font-display);
-  margin: 0; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  background: var(--bg); color: var(--fg); font-family: var(--font-body);
+  margin: 0; line-height: 1.65; -webkit-font-smoothing: antialiased;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-x: hidden;
 }
 *, *::before, *::after { box-sizing: border-box; }
-a { color: var(--red); text-decoration: none; transition: color 0.2s; }
+a { color: var(--red-soft); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--white); }
 img { max-width: 100%; }
-.container { max-width: 1140px; margin: 0 auto; }
-.eyebrow { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); display: flex; align-items: center; gap: 0.6em; }
-.eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--red); display: inline-block; }
-.section-title { font-size: clamp(1.8rem,4.5vw,2.8rem); font-weight: 800; color: var(--white); margin: 0.3em 0 0.5em; text-wrap: balance; line-height: 1.15; }
-.section { padding-block: 5rem; }
-.divider { border: none; height: 1px; background: var(--border); margin: 0; }
+.container { max-width: 1200px; margin: 0 auto; }
+[hidden] { display: none !important; }
+
+/* GLOBAL COMPONENTS */
+.eyebrow {
+  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--red-soft);
+  display: inline-flex; align-items: center; gap: 0.7em;
+}
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--red); }
+.section-title {
+  font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800; color: var(--white); margin: 0.4em 0 0.6em;
+  text-wrap: balance; line-height: 1.1; letter-spacing: -0.02em;
+}
+.section { padding-block: 6rem; }
+.divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0; }
+
+.btn {
+  font-family: var(--font-mono); font-size: 0.72rem; padding: 0.75em 1.6em;
+  font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  border-radius: var(--radius-sm); transition: all 0.25s; display: inline-flex;
+  align-items: center; gap: 0.5em; border: none; cursor: pointer; position: relative;
+}
+.btn-red {
+  background: var(--red); color: #fff;
+  box-shadow: 0 0 20px rgba(255,42,42,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.btn-red:hover { background: var(--red-soft); color: #fff; box-shadow: 0 0 30px rgba(255,42,42,0.4); transform: translateY(-1px); }
+.btn-outline {
+  border: 1px solid var(--border-light); color: var(--fg-muted); background: transparent;
+}
+.btn-outline:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
+.btn-ghost {
+  background: var(--bg-glass); border: 1px solid var(--border); color: var(--fg-muted);
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover { border-color: var(--red); color: var(--white); }
+
+/* SMOOTH REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
 /* NAV */
-nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100; background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 101; background: var(--bg); }
-.nav-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; padding: 0.7rem 0; gap: 1.5rem; }
-.nav-logo-img { height: 32px; width: auto; }
-.nav-links { display: flex; gap: 1.6rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
-.nav-links a { font-size: 0.76rem; color: var(--fg-muted); letter-spacing: 0.03em; text-transform: uppercase; font-weight: 600; transition: color 0.2s; cursor: pointer; }
+nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100;
+  background: var(--nav-bg); backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 101; background: var(--bg);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; display: flex;
+  align-items: center; padding: 0.75rem 0; gap: 1.5rem;
+}
+.nav-logo { display: flex; align-items: center; gap: 0.6rem; }
+.nav-logo-img { height: 28px; width: auto; }
+.nav-logo-text {
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.15em; color: var(--white); text-transform: uppercase;
+}
+.nav-links {
+  display: flex; gap: 1.8rem; list-style: none;
+  margin: 0 0 0 auto; padding: 0;
+}
+.nav-links a {
+  font-family: var(--font-display); font-size: 0.78rem; color: var(--fg-muted);
+  letter-spacing: 0.01em; font-weight: 500; transition: color 0.2s; cursor: pointer;
+}
 .nav-links a:hover, .nav-links a.active { color: var(--white); }
-.nav-right { display: flex; align-items: center; gap: 0.5rem; margin-left: 0.5rem; }
-.nav-btn { background: none; border: 1px solid var(--border); color: var(--fg-muted); height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: all 0.2s; padding: 0 8px; }
+.nav-right { display: flex; align-items: center; gap: 0.4rem; margin-left: 0.5rem; }
+.nav-btn {
+  background: none; border: 1px solid var(--border); color: var(--fg-muted);
+  height: 32px; width: 32px; border-radius: var(--radius-sm); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+  transition: all 0.2s;
+}
 .nav-btn:hover { border-color: var(--fg-muted); color: var(--white); }
-.lang-btn { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; }
-.nav-cta { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.45em 1.1em; background: var(--red); color: #fff; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; transition: background 0.2s; cursor: pointer; }
-.nav-cta:hover { background: #ff2a30; color: #fff; }
+.lang-btn { width: auto; padding: 0 10px; font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; }
+.nav-cta {
+  font-family: var(--font-mono); font-size: 0.68rem; padding: 0.5em 1.2em;
+  background: var(--red); color: #fff; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; border-radius: var(--radius-sm); transition: all 0.25s;
+  cursor: pointer; box-shadow: 0 0 16px rgba(255,42,42,0.2);
+}
+.nav-cta:hover { background: var(--red-soft); color: #fff; box-shadow: 0 0 24px rgba(255,42,42,0.35); }
 .hamburger { display: none; background: none; border: none; color: var(--fg); font-size: 1.3rem; cursor: pointer; padding: 4px; }
 @media (max-width: 800px) {
   .nav-links { display: none; }
-  .nav-links.open { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1rem max(16px, env(safe-area-inset-left, 0px)); gap: 0.7rem; z-index: 99; }
+  .nav-links.open {
+    display: flex; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem max(16px, env(safe-area-inset-left, 0px)); gap: 0.8rem; z-index: 99;
+  }
   .hamburger { display: block; margin-left: auto; }
   .nav-right { margin-left: 0; }
 }
 
 /* HERO */
-.hero { margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: calc(env(safe-area-inset-top, 0px) + 5rem); padding-bottom: 0; position: relative; overflow: hidden; }
-.hero-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; min-height: 60vh; }
-.hero-text { position: relative; z-index: 2; }
-.hero-text .eyebrow { margin-bottom: 1.5rem; }
-.hero-text h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 900; color: var(--white); line-height: 1.05; margin: 0 0 1.5rem; }
-.hero-text h1 em { font-style: normal; color: var(--red); }
-.hero-text p { font-size: 1rem; color: var(--fg-muted); max-width: 440px; margin: 0 0 2rem; line-height: 1.7; }
-.hero-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-.btn { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.7em 1.5em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5em; border: none; cursor: pointer; }
-.btn-red { background: var(--red); color: #fff; }
-.btn-red:hover { background: #ff2a30; color: #fff; }
-.btn-outline { border: 1px solid var(--border-light); color: var(--fg-muted); background: none; }
-.btn-outline:hover { border-color: var(--fg-muted); color: var(--white); }
-.hero-terminal { margin-top: -3rem; position: relative; z-index: 3; max-width: 500px; }
-@media (max-width: 800px) {
-  .hero-grid { grid-template-columns: 1fr; min-height: auto; }
-  .hero-terminal { margin-top: 1rem; }
+.hero {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 4rem);
+  padding-bottom: 2rem; position: relative; overflow: hidden;
+  min-height: 90vh; display: flex; align-items: center;
 }
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 40%, rgba(255,42,42,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 30%, rgba(168,85,247,0.04) 0%, transparent 50%);
+}
+.hero-grid-anim {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.12;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  animation: grid-drift 20s linear infinite;
+}
+@keyframes grid-drift { to { background-position: 60px 60px; } }
+.hero-content { position: relative; z-index: 2; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  padding: 0.4em 1em; border-radius: 100px;
+  background: var(--red-glow); border: 1px solid var(--border-glow);
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--red-soft); margin-bottom: 2rem;
+}
+.hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse-dot 2s ease infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,42,42,0.4); } 50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,42,42,0); } }
+.hero-title {
+  font-family: var(--font-display); font-size: clamp(2.8rem, 6.5vw, 5rem);
+  font-weight: 900; color: var(--white); line-height: 1.02; margin: 0 0 0.3em;
+  letter-spacing: -0.03em;
+}
+.hero-title .hero-name {
+  display: block; font-family: var(--font-mono); font-size: clamp(1rem, 2.2vw, 1.4rem);
+  letter-spacing: 0.28em; color: var(--red); font-weight: 700;
+  margin-bottom: 0.6rem; text-transform: uppercase;
+}
+.hero-title em { font-style: normal; color: var(--red); }
+.hero-title .stroke {
+  -webkit-text-stroke: 1.5px var(--fg-dim); color: transparent;
+}
+.hero-sub {
+  font-size: 1.05rem; color: var(--fg-muted); max-width: 500px;
+  margin: 0 0 2.5rem; line-height: 1.75; font-weight: 400;
+}
+.hero-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+.hero-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; }
+@media (max-width: 900px) { .hero-layout { grid-template-columns: 1fr; gap: 2rem; } .hero { min-height: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 3rem); } }
 
 /* TERMINAL */
-.terminal { background: var(--bg); border: 1px solid var(--border-light); border-radius: 6px; font-family: var(--font-mono); font-size: 0.75rem; overflow: hidden; }
-.terminal-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
-.terminal-dot { width: 9px; height: 9px; border-radius: 50%; }
-.terminal-dot.r { background: var(--red); }
-.terminal-dot.y, .terminal-dot.g { background: var(--fg-dim); }
-.terminal-title { margin-left: auto; color: var(--fg-dim); font-size: 0.65rem; }
-.terminal-body { padding: 0.8rem 1rem; line-height: 1.9; }
-.terminal-body .prompt { color: var(--red); }
+.terminal {
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius); font-family: var(--font-mono); font-size: 0.72rem;
+  overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(255,42,42,0.03);
+  position: relative;
+}
+.terminal::before {
+  content: ''; position: absolute; inset: -1px; border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--border-glow), transparent 50%);
+  z-index: -1;
+}
+.terminal-bar {
+  display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+  background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #ff5f57; }
+.terminal-dot.y { background: #febc2e; }
+.terminal-dot.g { background: #28c840; }
+.terminal-title { margin-left: auto; color: var(--fg-dim); font-size: 0.6rem; }
+.terminal-body { padding: 1rem 1.2rem; line-height: 2; }
+.terminal-body .prompt { color: var(--accent-cyan); }
 .terminal-body .cmd { color: var(--white); }
 .terminal-body .out { color: var(--fg-muted); }
-.cursor { display: inline-block; width: 7px; height: 14px; background: var(--red); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+.cursor { display: inline-block; width: 7px; height: 15px; background: var(--red); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* STATS */
-.stats { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 500px; margin-left: auto; margin-right: auto; gap: 1px; background: var(--border); border-top: 2px solid var(--red-dim); border-bottom: 2px solid var(--red-dim); }
-.stat { background: var(--bg); padding: 2rem 1.2rem; text-align: center; }
-.stat-idx { font-family: var(--font-mono); font-size: 0.58rem; color: var(--fg-dim); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.stat-num { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: var(--white); line-height: 1; font-variant-numeric: tabular-nums; }
-.stat-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg-muted); margin-top: 0.5rem; }
-
-/* GOALS */
-.goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 3rem; }
-.goal { padding: 2.5rem 2rem; position: relative; border-right: 1px solid var(--border); }
-.goal:last-child { border-right: none; }
-.goal-num { font-family: var(--font-mono); font-size: 4.5rem; font-weight: 900; color: var(--border); line-height: 1; position: absolute; top: 1rem; right: 1.5rem; pointer-events: none; user-select: none; }
-.goal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.8rem; }
-.goal h3 { font-size: 1.15rem; font-weight: 700; color: var(--white); margin: 0 0 0.6rem; }
-.goal p { font-size: 0.88rem; color: var(--fg-muted); line-height: 1.7; margin: 0 0 1.2rem; }
-.goal-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); display: inline-flex; align-items: center; gap: 0.4em; border: 1px solid var(--border); padding: 0.35em 0.8em; border-radius: 3px; transition: all 0.2s; }
-.goal-link:hover { border-color: var(--fg-muted); color: var(--white); }
-@media (max-width: 800px) {
-  .goals-grid { grid-template-columns: 1fr; }
-  .goal { border-right: none; border-bottom: 1px solid var(--border); }
-  .goal:last-child { border-bottom: none; }
+/* STATS STRIP */
+.stats-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border); border-radius: var(--radius); overflow: hidden;
+  margin-top: 4rem;
 }
+.stat-item {
+  background: var(--bg-card); padding: 2rem 1.5rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.stat-item::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--red-glow) 0%, transparent 70%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.stat-item:hover::before { opacity: 1; }
+.stat-num {
+  font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900; color: var(--white); line-height: 1; font-variant-numeric: tabular-nums;
+  position: relative;
+}
+.stat-label {
+  font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fg-muted); margin-top: 0.6rem; position: relative;
+}
+@media (max-width: 600px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } }
+
+/* ABOUT / GOALS */
+.goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.goal-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: all 0.35s;
+}
+.goal-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+.goal-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.goal-card:hover::before { opacity: 1; }
+.goal-icon {
+  width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 1.2rem; margin-bottom: 1.5rem;
+  background: var(--red-glow); border: 1px solid var(--border-glow);
+}
+.goal-num {
+  font-family: var(--font-mono); font-size: 5rem; font-weight: 900;
+  color: var(--border); line-height: 1; position: absolute; top: 0.5rem;
+  right: 1.5rem; pointer-events: none; user-select: none;
+}
+.goal-tag {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--red-soft); margin-bottom: 1rem;
+}
+.goal-card h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 0 0 0.6rem; }
+.goal-card p { font-size: 0.88rem; color: var(--fg-muted); line-height: 1.7; margin: 0 0 1.5rem; }
+.goal-link {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-muted);
+  display: inline-flex; align-items: center; gap: 0.4em;
+  padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  transition: all 0.25s;
+}
+.goal-link:hover { border-color: var(--red); color: var(--red-soft); background: var(--red-glow); }
+@media (max-width: 800px) { .goals-grid { grid-template-columns: 1fr; } }
 
 /* DOMAINS */
-.domains { margin-top: 3rem; }
-.domains-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
+.domains { margin-top: 3.5rem; }
+.domains-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 1rem; }
 .domain-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.domain-tag { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em; padding: 0.35em 0.9em; border: 1px solid var(--border); color: var(--fg-muted); transition: all 0.2s; }
-.domain-tag:hover { border-color: var(--red); color: var(--white); }
+.domain-tag {
+  font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+  padding: 0.4em 1em; border: 1px solid var(--border); color: var(--fg-muted);
+  border-radius: 100px; transition: all 0.25s; cursor: default;
+}
+.domain-tag:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
 
 /* ACHIEVEMENTS */
-.achieve-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
-.achieve-table th { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
-.achieve-table td { padding: 1.1rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-.achieve-table tr:hover td { background: var(--bg-elevated); }
-.rank { font-family: var(--font-mono); font-weight: 700; font-size: 1.2rem; }
-.rank.gold { color: #d4a017; }
-.rank.silver { color: #7a8a9e; }
-.comp-name { color: var(--white); font-weight: 600; }
-.comp-type { font-family: var(--font-mono); font-size: 0.6rem; color: var(--fg-dim); letter-spacing: 0.08em; text-transform: uppercase; }
-.comp-year { color: var(--fg-dim); font-family: var(--font-mono); font-size: 0.78rem; }
-.comp-link { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-muted); border: 1px solid var(--border); padding: 0.3em 0.7em; border-radius: 3px; display: inline-flex; align-items: center; gap: 0.4em; transition: all 0.2s; }
-.comp-link:hover { border-color: var(--fg-muted); color: var(--white); }
+.achieve-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+.achieve-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.8rem 2rem; display: flex; align-items: center; gap: 1.5rem;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.achieve-card:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+.achieve-card.gold { border-left: 3px solid #f59e0b; }
+.achieve-card.silver { border-left: 3px solid #64748b; }
+.achieve-rank {
+  font-family: var(--font-display); font-weight: 900; font-size: 2rem; min-width: 50px;
+}
+.achieve-rank.gold { color: #f59e0b; }
+.achieve-rank.silver { color: #94a3b8; }
+.achieve-info { flex: 1; min-width: 0; }
+.achieve-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--white); }
+.achieve-type { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-top: 0.2rem; }
+.achieve-year { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-dim); }
+.achieve-link {
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-muted);
+  border: 1px solid var(--border); padding: 0.35em 0.8em; border-radius: var(--radius-sm);
+  transition: all 0.25s; white-space: nowrap;
+}
+.achieve-link:hover { border-color: var(--red); color: var(--red-soft); }
 
 /* WRITEUPS */
-.writeup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); margin-top: 2rem; }
-.writeup-card { background: var(--bg); padding: 1.5rem; transition: background 0.2s; }
-.writeup-card:hover { background: var(--bg-elevated); }
-.writeup-card-cat { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-bottom: 0.5rem; }
-.writeup-card h3 { font-size: 1rem; font-weight: 700; color: var(--white); margin: 0 0 0.5rem; }
-.writeup-card-meta { font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-dim); }
-.writeup-card-excerpt { font-size: 0.85rem; color: var(--fg-muted); margin-top: 0.5rem; line-height: 1.6; }
-.writeups-empty { margin-top: 2rem; padding: 3rem 2rem; border: 1px dashed var(--border); text-align: center; color: var(--fg-dim); font-family: var(--font-mono); font-size: 0.78rem; }
+.writeup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+.writeup-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.8rem; transition: all 0.3s; position: relative; overflow: hidden;
+}
+.writeup-card:hover { border-color: var(--border-glow); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+.writeup-card-cat {
+  font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--red-soft); margin-bottom: 0.6rem;
+  display: inline-flex; align-items: center; gap: 0.4em;
+}
+.writeup-card-cat::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--red); }
+.writeup-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--white); margin: 0 0 0.5rem; line-height: 1.3; }
+.writeup-card-meta { font-family: var(--font-mono); font-size: 0.62rem; color: var(--fg-dim); }
+.writeup-card-excerpt { font-size: 0.84rem; color: var(--fg-muted); margin-top: 0.6rem; line-height: 1.6; }
+.writeups-empty {
+  margin-top: 2rem; padding: 4rem 2rem; border: 1px dashed var(--border);
+  border-radius: var(--radius); text-align: center; color: var(--fg-dim);
+  font-family: var(--font-mono); font-size: 0.75rem;
+}
 
 /* TEAM */
-.team-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-bottom: 3rem; }
-.team-intro-text p { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+.team-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-bottom: 3.5rem; }
+.team-intro-text p { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.75; margin: 0; }
 @media (max-width: 700px) { .team-intro { grid-template-columns: 1fr; } }
-.team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); }
-.member { padding: 1.5rem 1rem; text-align: center; background: var(--bg); transition: background 0.2s; }
-.member:hover { background: var(--bg-elevated); }
-.member-avatar { width: 68px; height: 68px; border-radius: 50%; margin: 0 auto 0.8rem; overflow: hidden; border: 2px solid var(--border); transition: border-color 0.3s; }
-.member:hover .member-avatar { border-color: var(--red); }
+.team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; }
+.member {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.8rem 1rem; text-align: center; transition: all 0.35s;
+  position: relative; overflow: hidden;
+}
+.member:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.member::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.member:hover::before { opacity: 1; }
+.member-avatar {
+  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1rem;
+  overflow: hidden; border: 2px solid var(--border); transition: all 0.35s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.member:hover .member-avatar { border-color: var(--red); box-shadow: 0 0 20px rgba(255,42,42,0.15); }
 .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.member-pseudo { font-family: var(--font-mono); font-size: 0.8rem; color: var(--white); font-weight: 700; }
-.member-name { font-size: 0.72rem; color: var(--fg-dim); margin-top: 0.2rem; }
-.member-role { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); margin-top: 0.4rem; }
+.member-pseudo { font-family: var(--font-mono); font-size: 0.78rem; color: var(--white); font-weight: 700; }
+.member-name { font-size: 0.68rem; color: var(--fg-dim); margin-top: 0.25rem; }
+.member-role {
+  font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--red-soft); margin-top: 0.5rem;
+  display: inline-flex; padding: 0.2em 0.6em; border-radius: 100px;
+  background: var(--red-glow); border: 1px solid var(--border-glow);
+}
+@media (max-width: 1000px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* CTA */
-.cta-section { text-align: center; padding-block: 7rem; position: relative; overflow: hidden; }
-.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, var(--red-glow) 0%, transparent 70%); pointer-events: none; }
-.cta-section h2 { font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 900; color: var(--white); margin: 0 0 0.8rem; position: relative; }
+.cta-section {
+  text-align: center; padding-block: 8rem; position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, var(--red-glow-strong) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6.5vw, 4.2rem);
+  font-weight: 900; color: var(--white); margin: 0 0 0.6rem; position: relative;
+  letter-spacing: -0.02em;
+}
 .cta-section h2 em { font-style: normal; color: var(--red); }
-.cta-section p { color: var(--fg-muted); max-width: 500px; margin: 0 auto 2.5rem; font-size: 0.95rem; position: relative; }
+.cta-section p { color: var(--fg-muted); max-width: 520px; margin: 0 auto 2.5rem; font-size: 1rem; position: relative; line-height: 1.7; }
 .cta-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; position: relative; }
 
 /* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
+footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 .foot-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 2rem; align-items: start; }
-.foot-brand-block .foot-logo { height: 24px; margin-bottom: 0.5rem; display: block; }
-.foot-brand-block .foot-tagline { font-size: 0.7rem; color: var(--fg-dim); }
+.foot-brand-block .foot-logo { height: 24px; margin-bottom: 0.6rem; display: block; }
+.foot-brand-block .foot-tagline { font-size: 0.7rem; color: var(--fg-dim); line-height: 1.5; }
 .foot-nav { display: flex; gap: 2rem; flex-wrap: wrap; }
-.foot-nav a { font-size: 0.72rem; color: var(--fg-muted); transition: color 0.2s; }
+.foot-nav a { font-size: 0.75rem; color: var(--fg-muted); transition: color 0.2s; }
 .foot-nav a:hover { color: var(--white); }
 .foot-socials { display: flex; gap: 0.6rem; justify-content: flex-end; }
-.foot-social { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--fg-muted); transition: all 0.2s; }
-.foot-social:hover { border-color: var(--fg-muted); color: var(--white); }
-.foot-social svg { width: 14px; height: 14px; fill: currentColor; }
-.foot-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.65rem; color: var(--fg-dim); font-family: var(--font-mono); letter-spacing: 0.05em; }
+.foot-social {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; color: var(--fg-muted);
+  transition: all 0.25s;
+}
+.foot-social:hover { border-color: var(--red); color: var(--white); background: var(--red-glow); }
+.foot-social svg { width: 15px; height: 15px; fill: currentColor; }
+.foot-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  font-size: 0.62rem; color: var(--fg-dim); font-family: var(--font-mono); letter-spacing: 0.06em;
+}
 @media (max-width: 700px) {
   .foot-grid { grid-template-columns: 1fr; text-align: center; }
   .foot-socials { justify-content: center; }
@@ -203,28 +451,56 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 }
 
 /* MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75); z-index: 200; align-items: center;
+  justify-content: center; backdrop-filter: blur(8px);
+}
 .modal-overlay.active { display: flex; }
-.modal { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 400px; padding: 2.5rem 2rem; margin: 1rem; position: relative; }
-.modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-dim); font-size: 1.2rem; cursor: pointer; }
+.modal {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius); width: 100%; max-width: 420px;
+  padding: 2.5rem 2rem; margin: 1rem; position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+.modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--fg-dim); font-size: 1.3rem; cursor: pointer; transition: color 0.2s; }
 .modal-close:hover { color: var(--white); }
-.modal h2 { font-size: 1.4rem; font-weight: 800; color: var(--white); margin: 0 0 0.3rem; }
+.modal h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--white); margin: 0 0 0.3rem; }
 .modal .subtitle { font-size: 0.85rem; color: var(--fg-muted); margin-bottom: 1.5rem; }
 .form-group { margin-bottom: 1rem; }
-.form-group label { display: block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.6rem 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--white); font-family: var(--font-display); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
-.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--red); }
-.form-group textarea { min-height: 200px; resize: vertical; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7; }
-.form-error { font-family: var(--font-mono); font-size: 0.7rem; color: var(--red); margin-top: 0.3rem; }
+.form-group label {
+  display: block; font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem;
+}
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 0.65rem 0.9rem; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--white); font-family: var(--font-body); font-size: 0.9rem;
+  outline: none; transition: border-color 0.25s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-glow); }
+.form-group textarea { min-height: 220px; resize: vertical; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.7; }
+.form-error { font-family: var(--font-mono); font-size: 0.68rem; color: var(--red); margin-top: 0.3rem; }
 .editor-toolbar { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
-.editor-toolbar button { font-family: var(--font-mono); font-size: 0.65rem; padding: 0.3em 0.7em; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--fg-muted); border-radius: 3px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3em; }
-.editor-toolbar button:hover { border-color: var(--fg-muted); color: var(--white); }
+.editor-toolbar button {
+  font-family: var(--font-mono); font-size: 0.62rem; padding: 0.35em 0.8em;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--fg-muted);
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.3em;
+}
+.editor-toolbar button:hover { border-color: var(--red); color: var(--white); }
 .editor-toolbar button.uploading { opacity: 0.5; pointer-events: none; }
 .editor-drop-zone { position: relative; }
 .editor-drop-zone.drag-over textarea { border-color: var(--red); background: var(--red-glow); }
-.form-submit { width: 100%; padding: 0.7rem; background: var(--red); color: #fff; border: none; border-radius: 4px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
-.form-submit:hover { background: #ff2a30; }
-.form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.form-submit {
+  width: 100%; padding: 0.75rem; background: var(--red); color: #fff;
+  border: none; border-radius: var(--radius-sm); font-family: var(--font-mono);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.25s; margin-top: 0.5rem;
+  box-shadow: 0 0 16px rgba(255,42,42,0.2);
+}
+.form-submit:hover { background: var(--red-soft); box-shadow: 0 0 24px rgba(255,42,42,0.35); }
+.form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 .modal-switch { text-align: center; margin-top: 1.2rem; font-size: 0.8rem; color: var(--fg-muted); }
 .modal-switch a { cursor: pointer; }
 
@@ -236,27 +512,40 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 
 /* WRITEUP VIEWER */
 .writeup-view { max-width: 760px; margin: 0 auto; }
-.writeup-view h1 { font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; color: var(--white); margin: 0 0 0.8rem; line-height: 1.15; }
-.writeup-view-meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-bottom: 2rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
-.writeup-view-body { font-size: 0.95rem; line-height: 1.8; color: var(--fg); }
-.writeup-view-body p { margin: 0 0 1.2rem; }
-.writeup-view-body code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg-elevated); padding: 0.15em 0.4em; border-radius: 3px; border: 1px solid var(--border); }
-.writeup-view-body pre { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0 0 1.2rem; }
+.writeup-view h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--white); margin: 0 0 0.8rem; line-height: 1.12; letter-spacing: -0.02em; }
+.writeup-view-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-dim); margin-bottom: 2.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.writeup-view-body { font-size: 0.95rem; line-height: 1.85; color: var(--fg); }
+.writeup-view-body p { margin: 0 0 1.4rem; }
+.writeup-view-body code { font-family: var(--font-mono); font-size: 0.84em; background: var(--bg-card); padding: 0.2em 0.45em; border-radius: 4px; border: 1px solid var(--border); }
+.writeup-view-body pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; overflow-x: auto; margin: 0 0 1.4rem; }
 .writeup-view-body pre code { background: none; border: none; padding: 0; }
-.writeup-view-body h2 { font-size: 1.3rem; font-weight: 700; color: var(--white); margin: 2rem 0 0.8rem; }
-.writeup-view-body h3 { font-size: 1.1rem; font-weight: 700; color: var(--white); margin: 1.5rem 0 0.6rem; }
-.back-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; margin-bottom: 2rem; }
+.writeup-view-body h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--white); margin: 2.5rem 0 0.8rem; }
+.writeup-view-body h3 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--white); margin: 2rem 0 0.6rem; }
+.back-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; margin-bottom: 2rem; transition: color 0.2s; }
 .back-link:hover { color: var(--white); }
 
-/* SCANLINE */
-.scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.4; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px); }
+/* FLOATING ORBS (decorative) */
+.orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  filter: blur(80px); opacity: 0.07; z-index: 0;
+}
+.orb-red { background: var(--red); width: 400px; height: 400px; }
+.orb-purple { background: var(--accent-purple); width: 300px; height: 300px; }
+
+/* SCANLINE (subtle) */
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.25;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.012) 2px, rgba(0,0,0,0.012) 4px);
+}
 </style>
 
 <div class="scanlines"></div>
 
 <nav>
   <div class="nav-inner">
-    <a href="#" onclick="showView('home');return false"><img src="logo.png" alt="SH1NY HUNT3RS" class="nav-logo-img"></a>
+    <a href="#" onclick="showView('home');return false" class="nav-logo">
+      <img src="logo.png" alt="SH1NY HUNT3RS" class="nav-logo-img">
+    </a>
     <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
       <li><a href="#about" data-en="About" data-fr="A propos">About</a></li>
@@ -280,7 +569,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div id="signInForm">
       <h2>Sign in</h2>
-      <div class="subtitle" data-en="Welcome back to SH1NY HUNT3RS." data-fr="Bon retour chez SH1NY HUNT3RS.">Welcome back to SH1NY HUNT3RS.</div>
+      <div class="subtitle" data-en="Welcome back, hunter." data-fr="Bon retour, hunter.">Welcome back, hunter.</div>
       <div class="form-group">
         <label>Email</label>
         <input type="email" id="siEmail" placeholder="hunter@sh1ny.team">
@@ -324,33 +613,39 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-anim"></div>
+  <div class="orb orb-red" style="top:-15%;left:-5%"></div>
+  <div class="orb orb-purple" style="bottom:10%;right:-8%"></div>
   <div class="container">
-    <div class="hero-grid">
-      <div class="hero-text">
-        <div class="eyebrow">Cybersecurity Collective</div>
-        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:0.5rem">SH1NY HUNT3RS</div>
-        <h1 data-en="How things work and what happens when they <em>don't.</em>" data-fr="Comment les choses fonctionnent et ce qui se passe quand elles <em>ne fonctionnent plus.</em>">How things work and what happens when they <em>don't.</em></h1>
-        <p data-en="Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see." data-fr="Hacking, competitions CTF et recherche de vulnerabilites. Une communaute beninoise qui traque ce que les autres ne voient pas.">Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see.</p>
+    <div class="hero-layout">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Cybersecurity Collective</div>
+        <h1 class="hero-title">
+          <span class="hero-name">SH1NY HUNT3RS</span>
+          <span data-en="How things work and what happens when they <em>don't.</em>" data-fr="Comment les choses fonctionnent et ce qui arrive quand elles <em>ne marchent plus.</em>">How things work and what happens when they <em>don't.</em></span>
+        </h1>
+        <p class="hero-sub" data-en="Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see." data-fr="Hacking, competitions CTF et recherche de vulnerabilites. Une communaute beninoise qui traque ce que les autres ne voient pas.">Hacking, CTF competitions, and vulnerability research. A community from Benin that hunts what others can't see.</p>
         <div class="hero-btns">
           <a href="#achievements" class="btn btn-red" data-en="Our results" data-fr="Nos resultats">Our results</a>
           <a href="#contact" class="btn btn-outline" data-en="Join the team ↗" data-fr="Rejoindre l'equipe ↗">Join the team ↗</a>
         </div>
       </div>
-    </div>
-    <div class="hero-terminal">
-      <div class="terminal">
-        <div class="terminal-bar">
-          <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
-          <span class="terminal-title">sh1ny@hunt3rs ~ bash</span>
-        </div>
-        <div class="terminal-body">
-          <div><span class="prompt">$</span> <span class="cmd">whoami</span></div>
-          <div class="out" data-en="CTF team &amp; security research collective" data-fr="equipe CTF &amp; collectif de recherche en securite">CTF team &amp; security research collective</div>
-          <div><span class="prompt">$</span> <span class="cmd">cat mission.txt</span></div>
-          <div class="out" data-en="hack · compete · learn · repeat" data-fr="hacker · competir · apprendre · recommencer">hack · compete · learn · repeat</div>
-          <div><span class="prompt">$</span> <span class="cmd">cat location.txt</span></div>
-          <div class="out">Cotonou, Benin 🇧🇯</div>
-          <div><span class="prompt">$</span> <span class="cursor"></span></div>
+      <div class="hero-terminal-wrap">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+            <span class="terminal-title">sh1ny@hunt3rs ~ bash</span>
+          </div>
+          <div class="terminal-body" id="termBody">
+            <div><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+            <div class="out" data-en="CTF team &amp; security research collective" data-fr="equipe CTF &amp; collectif de recherche en securite">CTF team &amp; security research collective</div>
+            <div><span class="prompt">$</span> <span class="cmd">cat mission.txt</span></div>
+            <div class="out" data-en="hack · compete · learn · repeat" data-fr="hacker · competir · apprendre · recommencer">hack · compete · learn · repeat</div>
+            <div><span class="prompt">$</span> <span class="cmd">cat location.txt</span></div>
+            <div class="out">Cotonou, Benin 🇧🇯</div>
+            <div><span class="prompt">$</span> <span class="cursor"></span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -358,48 +653,61 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 </section>
 
 <!-- STATS -->
-<div class="stats" style="margin-top: 3rem;">
-  <div class="stat">
-    <div class="stat-idx">01 / TEAM</div>
-    <div class="stat-num">10</div>
-    <div class="stat-label" data-en="Members" data-fr="Membres">Members</div>
-  </div>
-  <div class="stat">
-    <div class="stat-idx">02 / COMPETE</div>
-    <div class="stat-num">+115</div>
-    <div class="stat-label" data-en="National &amp; international CTF competitions" data-fr="Competitions CTF nationales &amp; internationales">National &amp; international CTF competitions</div>
+<div class="container">
+  <div class="stats-strip reveal">
+    <div class="stat-item">
+      <div class="stat-num">10</div>
+      <div class="stat-label" data-en="Members" data-fr="Membres">Members</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">115+</div>
+      <div class="stat-label" data-en="CTF Competitions" data-fr="Competitions CTF">CTF Competitions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2x</div>
+      <div class="stat-label" data-en="National Champions" data-fr="Champions nationaux">National Champions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">10+</div>
+      <div class="stat-label" data-en="Domains covered" data-fr="Domaines couverts">Domains covered</div>
+    </div>
   </div>
 </div>
 
-<!-- GOALS -->
+<!-- GOALS / ABOUT -->
 <section class="section" id="about">
   <div class="container">
-    <div class="eyebrow" data-en="Our goals" data-fr="Nos objectifs">Our goals</div>
-    <h2 class="section-title" data-en="Break systems. Build skills. Represent Benin." data-fr="Casser des systemes. Monter en competences. Representer le Benin.">Break systems. Build skills. Represent Benin.</h2>
+    <div class="reveal">
+      <div class="eyebrow" data-en="What we do" data-fr="Ce qu'on fait">What we do</div>
+      <h2 class="section-title" data-en="Break systems. Build skills. Represent Benin." data-fr="Casser des systemes. Monter en competences. Representer le Benin.">Break systems. Build skills. Represent Benin.</h2>
+    </div>
     <div class="goals-grid">
-      <div class="goal">
+      <div class="goal-card reveal">
         <div class="goal-num">01</div>
+        <div class="goal-icon">&#128274;</div>
         <div class="goal-tag" data-en="HACK" data-fr="HACKER">HACK</div>
         <h3 data-en="Break to Understand" data-fr="Casser pour comprendre">Break to Understand</h3>
         <p data-en="Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail." data-fr="Explorer les systemes, trouver les failles, exploiter les vulnerabilites. On apprend en cassant les choses et en comprenant pourquoi elles echouent.">Explore systems, find weaknesses, exploit vulnerabilities. We learn by breaking things apart and understanding how they fail.</p>
         <a href="#achievements" class="goal-link" data-en="See our results ↗" data-fr="Voir nos resultats ↗">See our results ↗</a>
       </div>
-      <div class="goal">
+      <div class="goal-card reveal">
         <div class="goal-num">02</div>
+        <div class="goal-icon">&#127942;</div>
         <div class="goal-tag" data-en="COMPETE" data-fr="COMPETIR">COMPETE</div>
         <h3 data-en="Win Under Pressure" data-fr="Gagner sous pression">Win Under Pressure</h3>
         <p data-en="CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round." data-fr="Les competitions CTF nous poussent a resoudre des problemes complexes rapidement. On compete au niveau national et international.">CTF competitions push us to solve hard problems fast. We compete nationally and internationally, sharpening our edge every round.</p>
         <a onclick="showView('writeups-list');return false" class="goal-link" style="cursor:pointer">Writeups ↗</a>
       </div>
-      <div class="goal">
+      <div class="goal-card reveal">
         <div class="goal-num">03</div>
+        <div class="goal-icon">&#128218;</div>
         <div class="goal-tag" data-en="SHARE" data-fr="PARTAGER">SHARE</div>
         <h3 data-en="Level Up Together" data-fr="Progresser ensemble">Level Up Together</h3>
-        <p data-en="Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers." data-fr="Le savoir grandit quand il est partage. On documente nos solutions, on enseigne des techniques et on se pousse a devenir de meilleurs chercheurs.">Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers.</p>
+        <p data-en="Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers." data-fr="Le savoir grandit quand il est partage. On documente nos solutions, on enseigne des techniques et on se pousse mutuellement.">Knowledge grows when shared. We write up solutions, teach techniques, and push each other to become better security researchers.</p>
         <a href="#team" class="goal-link" data-en="Meet the team ↗" data-fr="L'equipe ↗">Meet the team ↗</a>
       </div>
     </div>
-    <div class="domains">
+    <div class="domains reveal">
       <div class="domains-label" data-en="Our fields" data-fr="Nos domaines">Our fields</div>
       <div class="domain-tags">
         <span class="domain-tag">Web</span><span class="domain-tag">Pwn</span><span class="domain-tag">Reverse</span><span class="domain-tag">Crypto</span><span class="domain-tag">Forensics</span><span class="domain-tag">OSINT</span><span class="domain-tag">Hardware</span><span class="domain-tag">Cloud</span><span class="domain-tag">AI / ML</span><span class="domain-tag">Misc</span>
@@ -413,36 +721,39 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 <!-- ACHIEVEMENTS -->
 <section class="section" id="achievements">
   <div class="container">
-    <div class="eyebrow">scoreboard.log</div>
-    <h2 class="section-title" data-en="Our Achievements" data-fr="Nos resultats">Our Achievements</h2>
-    <table class="achieve-table">
-      <thead><tr>
-        <th data-en="Rank" data-fr="Rang">Rank</th>
-        <th>Competition</th>
-        <th data-en="Year" data-fr="Annee">Year</th>
-        <th></th>
-      </tr></thead>
-      <tbody>
-        <tr>
-          <td><span class="rank gold">#1</span></td>
-          <td><span class="comp-name">HackerLab 2026</span><br><span class="comp-type">CTF</span></td>
-          <td><span class="comp-year">2026</span></td>
-          <td><a class="comp-link" href="https://ctf.hackerlab.bj/scoreboard" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
-        </tr>
-        <tr>
-          <td><span class="rank gold">#1</span></td>
-          <td><span class="comp-name">Qualifs HackerLab 2026</span><br><span class="comp-type">CTF</span></td>
-          <td><span class="comp-year">2026</span></td>
-          <td><a class="comp-link" href="https://asin.bj/article/75/hackerlab-2026-equipes-qualifiees/" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
-        </tr>
-        <tr>
-          <td><span class="rank silver">#2</span></td>
-          <td><span class="comp-name">Epihack Finale 2026</span><br><span class="comp-type">CTF</span></td>
-          <td><span class="comp-year">2026</span></td>
-          <td><a class="comp-link" href="https://epihack.site/" target="_blank" rel="noopener" data-en="View result ↗" data-fr="Voir ↗">View result ↗</a></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="reveal">
+      <div class="eyebrow">scoreboard.log</div>
+      <h2 class="section-title" data-en="Our Achievements" data-fr="Nos resultats">Our Achievements</h2>
+    </div>
+    <div class="achieve-cards">
+      <div class="achieve-card gold reveal">
+        <div class="achieve-rank gold">#1</div>
+        <div class="achieve-info">
+          <div class="achieve-name">HackerLab 2026</div>
+          <div class="achieve-type">CTF · Finale nationale</div>
+        </div>
+        <div class="achieve-year">2026</div>
+        <a class="achieve-link" href="https://ctf.hackerlab.bj/scoreboard" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
+      </div>
+      <div class="achieve-card gold reveal">
+        <div class="achieve-rank gold">#1</div>
+        <div class="achieve-info">
+          <div class="achieve-name">Qualifs HackerLab 2026</div>
+          <div class="achieve-type">CTF · Qualifications</div>
+        </div>
+        <div class="achieve-year">2026</div>
+        <a class="achieve-link" href="https://asin.bj/article/75/hackerlab-2026-equipes-qualifiees/" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
+      </div>
+      <div class="achieve-card silver reveal">
+        <div class="achieve-rank silver">#2</div>
+        <div class="achieve-info">
+          <div class="achieve-name">Epihack Finale 2026</div>
+          <div class="achieve-type">CTF · Finale</div>
+        </div>
+        <div class="achieve-year">2026</div>
+        <a class="achieve-link" href="https://epihack.site/" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -451,8 +762,10 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 <!-- WRITEUPS (home preview) -->
 <section class="section" id="writeups">
   <div class="container">
-    <div class="eyebrow">knowledge.base</div>
-    <h2 class="section-title">Writeups</h2>
+    <div class="reveal">
+      <div class="eyebrow">knowledge.base</div>
+      <h2 class="section-title">Writeups</h2>
+    </div>
     <div id="homeWriteups"></div>
   </div>
 </section>
@@ -462,61 +775,63 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 <!-- TEAM -->
 <section class="section" id="team">
   <div class="container">
-    <div class="eyebrow" data-en="The Hunters" data-fr="Les Hunters">The Hunters</div>
-    <div class="team-intro">
-      <h2 class="section-title" data-en="Meet the Team" data-fr="L'equipe">Meet the Team</h2>
-      <div class="team-intro-text">
-        <p data-en="The people behind the flags, the exploits, and the late-night debugging sessions." data-fr="Ceux derriere les flags, les exploits et les sessions de debug jusqu'au bout de la nuit.">The people behind the flags, the exploits, and the late-night debugging sessions.</p>
+    <div class="reveal">
+      <div class="eyebrow" data-en="The Hunters" data-fr="Les Hunters">The Hunters</div>
+      <div class="team-intro">
+        <h2 class="section-title" data-en="Meet the Team" data-fr="L'equipe">Meet the Team</h2>
+        <div class="team-intro-text">
+          <p data-en="The people behind the flags, the exploits, and the late-night debugging sessions." data-fr="Ceux derriere les flags, les exploits et les sessions de debug jusqu'au bout de la nuit.">The people behind the flags, the exploits, and the late-night debugging sessions.</p>
+        </div>
       </div>
     </div>
     <div class="team-grid">
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="unp4tch3.webp" alt="UNP4TCH3D"></div>
         <div class="member-pseudo">UNP4TCH3D</div>
         <div class="member-name">ADANHOUNDJI Eliel Fresnel</div>
         <div class="member-role">Founder</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div>
         <div class="member-pseudo">K1LLS3VR4Q</div>
         <div class="member-name">TOGBEDJI Daziano</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div>
         <div class="member-pseudo">Le_Geek</div>
         <div class="member-name">AGOUNLOYE Amir</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div>
         <div class="member-pseudo">I_Am_Atomic</div>
         <div class="member-name">AHOMAGNON Aurel</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div>
         <div class="member-pseudo">Josi_hack</div>
         <div class="member-name">BATONON Josias</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div>
         <div class="member-pseudo">cbk_667</div>
         <div class="member-name">AZOMBADE Frejus</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div>
         <div class="member-pseudo">K0BR4</div>
         <div class="member-name">BABALOLA Dimitri</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div>
         <div class="member-pseudo">Mr_Nobody</div>
         <div class="member-name">LOKO HADJIHOU David</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div>
         <div class="member-pseudo">Hakim lyons</div>
         <div class="member-name">GBETOHO Jose</div>
       </div>
-      <div class="member">
+      <div class="member reveal">
         <div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div>
         <div class="member-pseudo">Ryuk_kira</div>
         <div class="member-name">GNONLONFIN Frankel</div>
@@ -530,12 +845,14 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 <!-- CTA -->
 <section class="cta-section" id="contact">
   <div class="container">
-    <div class="eyebrow" style="justify-content:center" data-en="Join the hunt" data-fr="Rejoins la chasse">Join the hunt</div>
-    <h2 data-en="Join the <em>team.</em>" data-fr="Rejoins l'<em>equipe.</em>">Join the <em>team.</em></h2>
-    <p data-en="Learn with us, compete with us, and help put Benin on the global CTF map." data-fr="Apprends avec nous, compete avec nous et aide a mettre le Benin sur la carte mondiale du CTF.">Learn with us, compete with us, and help put Benin on the global CTF map.</p>
-    <div class="cta-btns">
-      <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="btn btn-red">GitHub ↗</a>
-      <button class="btn btn-outline" onclick="openModal('signup')" data-en="Create account" data-fr="Creer un compte">Create account</button>
+    <div class="reveal">
+      <div class="eyebrow" style="justify-content:center" data-en="Join the hunt" data-fr="Rejoins la chasse">Join the hunt</div>
+      <h2 data-en="Join the <em>team.</em>" data-fr="Rejoins l'<em>equipe.</em>">Join the <em>team.</em></h2>
+      <p data-en="Learn with us, compete with us, and help put Benin on the global CTF map." data-fr="Apprends avec nous, compete avec nous et aide a mettre le Benin sur la carte mondiale du CTF.">Learn with us, compete with us, and help put Benin on the global CTF map.</p>
+      <div class="cta-btns">
+        <a href="https://github.com/sh1nyhunt3rs" target="_blank" rel="noopener" class="btn btn-red">GitHub ↗</a>
+        <button class="btn btn-outline" onclick="openModal('signup')" data-en="Create account" data-fr="Creer un compte">Create account</button>
+      </div>
     </div>
   </div>
 </section>
@@ -620,13 +937,13 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
           <button class="btn btn-outline" onclick="doSignOut()" data-en="Sign out" data-fr="Deconnexion">Sign out</button>
         </div>
       </div>
-      <h3 style="color:var(--white);font-size:1rem;margin:2rem 0 1rem" data-en="My writeups" data-fr="Mes writeups">My writeups</h3>
+      <h3 style="color:var(--white);font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin:2rem 0 1rem" data-en="My writeups" data-fr="Mes writeups">My writeups</h3>
       <div id="myWriteups"></div>
     </div>
   </section>
 </div>
 
-<!-- FOOTER (always visible) -->
+<!-- FOOTER -->
 <footer>
   <div class="container">
     <div class="foot-grid">
@@ -748,7 +1065,6 @@ async function doSignUp() {
   if (password.length < 6) { err.textContent = 'Password: min. 6 characters'; btn.disabled = false; return; }
   const { data, error } = await sb.auth.signUp({ email, password, options: { data: { pseudo, full_name: fullName } } });
   if (error) { err.textContent = error.message; btn.disabled = false; return; }
-  
   closeModal();
   btn.disabled = false;
 }
@@ -782,7 +1098,6 @@ sb.auth.onAuthStateChange(async (event, session) => {
   updateNavAuth(currentUser);
 });
 
-// Fallback: if onAuthStateChange doesn't fire, check session manually
 sb.auth.getSession().then(({ data }) => {
   if (document.getElementById('navAuth').innerHTML === '') {
     currentUser = data?.session?.user || null;
@@ -803,11 +1118,11 @@ function md(text) {
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;margin:0.5em 0">');
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin:0.5em 0">');
   h = h.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => '<pre><code>' + code.trim() + '</code></pre>');
   h = h.split(/\n\n+/).map(p => {
     p = p.trim();
-    if (p.startsWith('<h') || p.startsWith('<pre')) return p;
+    if (p.startsWith('<h') || p.startsWith('<pre') || p.startsWith('<img')) return p;
     return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
   }).join('\n');
   return h;
@@ -863,7 +1178,7 @@ async function viewWriteup(id) {
   if (!data) { container.innerHTML = 'Not found'; return; }
   container.innerHTML = `
     <a class="back-link" onclick="showView('writeups-list')">← Back to writeups</a>
-    <div style="font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:0.5rem">${data.category}</div>
+    <div style="font-family:var(--font-mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--red-soft);margin-bottom:0.5rem;display:inline-flex;align-items:center;gap:0.4em"><span style="width:4px;height:4px;border-radius:50%;background:var(--red);display:inline-block"></span> ${data.category}</div>
     <h1>${esc(data.title)}</h1>
     <div class="writeup-view-meta">
       <span>${data.profiles?.pseudo || 'Anonymous'}</span>
@@ -889,9 +1204,9 @@ async function loadDashboard() {
     <div class="writeup-card">
       <div style="display:flex;justify-content:space-between;align-items:start">
         <div class="writeup-card-cat">${w.category} ${w.published ? '' : '&middot; DRAFT'}</div>
-        <div style="display:flex;gap:0.4rem">
-          <span style="cursor:pointer;font-size:0.7rem;color:var(--fg-muted)" onclick="editWriteup(${w.id})">Edit</span>
-          <span style="cursor:pointer;font-size:0.7rem;color:var(--red)" onclick="deleteWriteup(${w.id})">Delete</span>
+        <div style="display:flex;gap:0.5rem">
+          <span style="cursor:pointer;font-size:0.68rem;color:var(--fg-muted);font-family:var(--font-mono)" onclick="editWriteup(${w.id})">Edit</span>
+          <span style="cursor:pointer;font-size:0.68rem;color:var(--red);font-family:var(--font-mono)" onclick="deleteWriteup(${w.id})">Delete</span>
         </div>
       </div>
       <h3>${esc(w.title)}</h3>
@@ -1016,6 +1331,12 @@ async function handleImageFiles(files) {
     if (files.length) { e.preventDefault(); handleImageFiles(files); }
   });
 })();
+
+// SCROLL REVEAL
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // INIT
 loadHomeWriteups();
