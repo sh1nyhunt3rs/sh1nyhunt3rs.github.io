@@ -175,13 +175,47 @@ body::before {
 .hero-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; }
 @media (max-width: 900px) { .hero-layout { grid-template-columns: 1fr; gap: 2rem; } .hero { min-height: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 3rem); } }
 
+/* HERO VISUAL FRAME */
+.hero-visual { position: relative; }
+.hero-frame {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 30px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,42,42,0.08);
+  opacity: 0; transform: translateY(20px);
+}
+.hero-frame img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; }
+.hero-scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,229,255,0.04) 50%, transparent 60%);
+  background-size: 100% 300%; animation: heroScan 4s ease-in-out infinite;
+}
+@keyframes heroScan { 0%,100% { background-position: 0 0; } 50% { background-position: 0 100%; } }
+.hero-frame-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 50%, rgba(5,5,8,0.7) 100%);
+}
+.hero-tick {
+  position: absolute; width: 20px; height: 20px; pointer-events: none;
+  border-color: var(--red); border-style: solid; border-width: 0; z-index: 2;
+}
+.hero-tick-tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; }
+.hero-tick-tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; }
+.hero-tick-bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; }
+.hero-tick-br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; }
+.hero-frame-label {
+  position: absolute; bottom: 16px; left: 16px; z-index: 3;
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.5); padding: 0.3em 0.8em; border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
 /* TERMINAL */
 .terminal {
   background: var(--bg-card); border: 1px solid var(--border-light);
   border-radius: var(--radius); font-family: var(--font-mono); font-size: 0.72rem;
   overflow: hidden; box-shadow: 0 20px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,42,42,0.05);
   position: relative; opacity: 0; transform: translateY(30px) rotateX(5deg);
-  transform-origin: center bottom;
+  transform-origin: center bottom; margin-top: 1rem;
 }
 .terminal-bar {
   display: flex; align-items: center; gap: 6px; padding: 10px 14px;
@@ -200,21 +234,28 @@ body::before {
 @keyframes blink { 50% { opacity: 0; } }
 .typed-line { overflow: hidden; white-space: nowrap; }
 
-/* STATS */
-.stats-strip {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-  background: var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 4rem;
+/* STATS BAND */
+.stats-band {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated); margin-top: -1px; position: relative; z-index: 3;
 }
+.stats-band .container { display: grid; grid-template-columns: repeat(4, 1fr); }
 .stat-item {
-  background: var(--bg-card); padding: 2.2rem 1.5rem; text-align: center;
+  padding: 2rem 1.5rem; text-align: center;
   position: relative; overflow: hidden; transition: all 0.3s;
+  border-right: 1px solid var(--border);
 }
+.stat-item:last-child { border-right: none; }
 .stat-item::before {
   content: ''; position: absolute; inset: 0;
   background: radial-gradient(circle at 50% 0%, var(--red-glow-strong) 0%, transparent 70%);
   opacity: 0; transition: opacity 0.4s;
 }
 .stat-item:hover::before { opacity: 1; }
+.stat-k {
+  font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fg-dim); position: relative; margin-bottom: 0.5rem;
+}
 .stat-num {
   font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 900; color: var(--white); line-height: 1; font-variant-numeric: tabular-nums;
@@ -222,9 +263,9 @@ body::before {
 }
 .stat-label {
   font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--fg-muted); margin-top: 0.6rem; position: relative;
+  text-transform: uppercase; color: var(--fg-muted); margin-top: 0.4rem; position: relative;
 }
-@media (max-width: 600px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .stats-band .container { grid-template-columns: repeat(2, 1fr); } .stat-item:nth-child(2) { border-right: none; } }
 
 /* GOALS */
 .goals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
@@ -534,6 +575,39 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
   border-bottom: 1px solid var(--border);
 }
 
+/* FEATURED BANNER */
+.feat-banner {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  border: 1px solid var(--border); margin-top: 3rem;
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 320px;
+}
+.feat-banner-img { position: relative; overflow: hidden; }
+.feat-banner-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.feat-banner-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 60%, var(--bg-card) 100%);
+}
+.feat-banner-body {
+  padding: 2.5rem; display: flex; flex-direction: column; justify-content: center;
+  background: var(--bg-card); position: relative;
+}
+.feat-banner-tag {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #f59e0b; display: inline-flex; align-items: center;
+  gap: 0.5em; margin-bottom: 1rem;
+}
+.feat-banner-tag::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; }
+.feat-banner h3 {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; color: var(--white); margin: 0 0 0.6rem; line-height: 1.15;
+}
+.feat-banner p { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.65; margin: 0 0 1.5rem; }
+.feat-banner-stats {
+  display: flex; gap: 2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-muted);
+}
+.feat-banner-stats strong { font-size: 1.3rem; color: var(--white); display: block; font-family: var(--font-display); font-weight: 800; }
+@media (max-width: 700px) { .feat-banner { grid-template-columns: 1fr; } .feat-banner-img::after { background: linear-gradient(180deg, transparent 60%, var(--bg-card) 100%); } }
+
 /* SCANLINE */
 .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.2; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px); }
 
@@ -617,7 +691,17 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
           <a href="#contact" class="btn btn-outline" data-en="Join the team ↗" data-fr="Rejoindre l'equipe ↗">Join the team ↗</a>
         </div>
       </div>
-      <div>
+      <div class="hero-visual">
+        <div class="hero-frame" id="heroFrame">
+          <img src="hero-visual.jpg" alt="SH1NY HUNT3RS" width="800" height="800" fetchpriority="high">
+          <span class="hero-scan" aria-hidden="true"></span>
+          <span class="hero-frame-shade" aria-hidden="true"></span>
+          <span class="hero-tick hero-tick-tl" aria-hidden="true"></span>
+          <span class="hero-tick hero-tick-tr" aria-hidden="true"></span>
+          <span class="hero-tick hero-tick-bl" aria-hidden="true"></span>
+          <span class="hero-tick hero-tick-br" aria-hidden="true"></span>
+          <span class="hero-frame-label">SH1NY HUNT3RS · Cotonou, BJ</span>
+        </div>
         <div class="terminal" id="heroTerminal">
           <div class="terminal-bar">
             <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
@@ -630,13 +714,13 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
   </div>
 </section>
 
-<!-- STATS -->
-<div class="container">
-  <div class="stats-strip" id="statsStrip">
-    <div class="stat-item"><div class="stat-num" data-count="10">0</div><div class="stat-label" data-en="Members" data-fr="Membres">Members</div></div>
-    <div class="stat-item"><div class="stat-num" data-count="115" data-suffix="+">0</div><div class="stat-label" data-en="CTF Competitions" data-fr="Competitions CTF">CTF Competitions</div></div>
-    <div class="stat-item"><div class="stat-num" data-count="2" data-suffix="x">0</div><div class="stat-label" data-en="National Champions" data-fr="Champions nationaux">National Champions</div></div>
-    <div class="stat-item"><div class="stat-num" data-count="10" data-suffix="+">0</div><div class="stat-label" data-en="Domains covered" data-fr="Domaines couverts">Domains covered</div></div>
+<!-- STATS BAND -->
+<div class="stats-band" id="statsStrip">
+  <div class="container">
+    <div class="stat-item"><div class="stat-k">01 / Team</div><div class="stat-num" data-count="10">0</div><div class="stat-label" data-en="Team members" data-fr="Membres">Team members</div></div>
+    <div class="stat-item"><div class="stat-k">02 / Compete</div><div class="stat-num" data-count="115" data-suffix="+">0</div><div class="stat-label" data-en="CTF competitions" data-fr="Competitions CTF">CTF competitions</div></div>
+    <div class="stat-item"><div class="stat-k">03 / Win</div><div class="stat-num" data-count="2" data-suffix="x">0</div><div class="stat-label" data-en="National champions" data-fr="Champions nationaux">National champions</div></div>
+    <div class="stat-item"><div class="stat-k">04 / Research</div><div class="stat-num" data-count="10" data-suffix="+">0</div><div class="stat-label" data-en="Domains covered" data-fr="Domaines couverts">Domains covered</div></div>
   </div>
 </div>
 
@@ -707,6 +791,24 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
         <a class="achieve-link" href="https://epihack.site/" target="_blank" rel="noopener" data-en="View ↗" data-fr="Voir ↗">View ↗</a>
       </div>
     </div>
+
+    <!-- FEATURED: HACKERLAB WIN -->
+    <div class="feat-banner">
+      <div class="feat-banner-img">
+        <img src="hackerlab-win.jpg" alt="SH1NY HUNT3RS win HackerLab 2026" loading="lazy">
+      </div>
+      <div class="feat-banner-body">
+        <div class="feat-banner-tag" data-en="1st Place · National Final" data-fr="1er Prix · Finale nationale">1st Place · National Final</div>
+        <h3 data-en="HackerLab 2026 Champions" data-fr="Champions HackerLab 2026">HackerLab 2026 Champions</h3>
+        <p data-en="SH1NY HUNT3RS took 1st place at the HackerLab 2026 national CTF final at the Cyber Africa Forum in Cotonou, winning the 3,000,000 F CFA grand prize." data-fr="SH1NY HUNT3RS a pris la 1ere place a la finale nationale du CTF HackerLab 2026 au Cyber Africa Forum a Cotonou, remportant le grand prix de 3 000 000 F CFA.">SH1NY HUNT3RS took 1st place at the HackerLab 2026 national CTF final at the Cyber Africa Forum in Cotonou, winning the 3,000,000 F CFA grand prize.</p>
+        <div class="feat-banner-stats">
+          <div><strong>#1</strong> <span data-en="Final rank" data-fr="Classement final">Final rank</span></div>
+          <div><strong>3M</strong> <span>F CFA</span></div>
+          <div><strong>CAF</strong> <span>2026</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -735,15 +837,15 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
     </div>
     <div class="team-grid">
       <div class="member"><div class="member-avatar"><img src="unp4tch3.webp" alt="UNP4TCH3D"></div><div class="member-pseudo">UNP4TCH3D</div><div class="member-name">ADANHOUNDJI Eliel Fresnel</div><div class="member-role">Founder</div></div>
-      <div class="member"><div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div><div class="member-pseudo">K1LLS3VR4Q</div><div class="member-name">TOGBEDJI Daziano</div></div>
-      <div class="member"><div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div><div class="member-pseudo">Le_Geek</div><div class="member-name">AGOUNLOYE Amir</div></div>
-      <div class="member"><div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div><div class="member-pseudo">I_Am_Atomic</div><div class="member-name">AHOMAGNON Aurel</div></div>
-      <div class="member"><div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div><div class="member-pseudo">Josi_hack</div><div class="member-name">BATONON Josias</div></div>
-      <div class="member"><div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div><div class="member-pseudo">cbk_667</div><div class="member-name">AZOMBADE Frejus</div></div>
-      <div class="member"><div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div><div class="member-pseudo">K0BR4</div><div class="member-name">BABALOLA Dimitri</div></div>
-      <div class="member"><div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div><div class="member-pseudo">Mr_Nobody</div><div class="member-name">LOKO HADJIHOU David</div></div>
-      <div class="member"><div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div><div class="member-pseudo">Hakim lyons</div><div class="member-name">GBETOHO Jose</div></div>
-      <div class="member"><div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div><div class="member-pseudo">Ryuk_kira</div><div class="member-name">GNONLONFIN Frankel</div></div>
+      <div class="member"><div class="member-avatar"><img src="k1lls3vr4q.webp" alt="K1LLS3VR4Q"></div><div class="member-pseudo">K1LLS3VR4Q</div><div class="member-name">TOGBEDJI Daziano</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="legeek.svg" alt="Le_Geek"></div><div class="member-pseudo">Le_Geek</div><div class="member-name">AGOUNLOYE Amir</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="iamatomic.webp" alt="I_Am_Atomic"></div><div class="member-pseudo">I_Am_Atomic</div><div class="member-name">AHOMAGNON Aurel</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="josihack.webp" alt="Josi_hack"></div><div class="member-pseudo">Josi_hack</div><div class="member-name">BATONON Josias</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="cbk_667.webp" alt="cbk_667"></div><div class="member-pseudo">cbk_667</div><div class="member-name">AZOMBADE Frejus</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="k0br4.webp" alt="K0BR4"></div><div class="member-pseudo">K0BR4</div><div class="member-name">BABALOLA Dimitri</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="mr_nobody.webp" alt="Mr_Nobody"></div><div class="member-pseudo">Mr_Nobody</div><div class="member-name">LOKO HADJIHOU David</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="hakim-lyons.webp" alt="Hakim lyons"></div><div class="member-pseudo">Hakim lyons</div><div class="member-name">GBETOHO Jose</div><div class="member-role">Member</div></div>
+      <div class="member"><div class="member-avatar"><img src="ryuk_kira.webp" alt="Ryuk_kira"></div><div class="member-pseudo">Ryuk_kira</div><div class="member-name">GNONLONFIN Frankel</div><div class="member-role">Member</div></div>
     </div>
   </div>
 </section>
@@ -998,7 +1100,8 @@ heroTL
   .from('#heroHeadline', { opacity: 0, y: 30, duration: 0.7 }, 0.6)
   .to('.hero-sub', { opacity: 1, y: 0, duration: 0.6 }, 0.9)
   .to('.hero-btns', { opacity: 1, y: 0, duration: 0.5 }, 1.1)
-  .to('.terminal', { opacity: 1, y: 0, rotateX: 0, duration: 0.8, ease: 'back.out(1.5)' }, 0.7);
+  .to('.hero-frame', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 0.3)
+  .to('.terminal', { opacity: 1, y: 0, rotateX: 0, duration: 0.8, ease: 'back.out(1.5)' }, 0.9);
 
 // Typing terminal
 (function() {
@@ -1046,7 +1149,7 @@ heroTL
 })();
 
 // Scroll-triggered sections
-gsap.utils.toArray('.section, .stats-strip').forEach(el => {
+gsap.utils.toArray('.section, .stats-band').forEach(el => {
   gsap.from(el, {
     scrollTrigger: { trigger: el, start: 'top 85%', once: true },
     opacity: 0, y: 50, duration: 0.8, ease: 'power2.out'
