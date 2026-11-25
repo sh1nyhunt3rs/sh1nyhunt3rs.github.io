@@ -399,6 +399,141 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 .back-link { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4em; margin-bottom: 2rem; transition: color 0.2s; }
 .back-link:hover { color: var(--white); }
 
+/* WRITEUPS PAGE (JordanSec-style) */
+.wu-phead { padding: 4rem 0 2rem; }
+.wu-phead .hv-eyebrow { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red-soft); margin-bottom: 0.5rem; }
+.wu-phead h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: var(--white); margin: 0 0 0.4rem; letter-spacing: -0.02em; }
+.wu-phead .hv-lead { color: var(--fg-muted); font-size: 0.95rem; margin: 0 0 1.5rem; max-width: 500px; }
+.wu-sum { display: flex; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-muted); flex-wrap: wrap; }
+.wu-sum b { color: var(--white); }
+
+.wu-toolbar {
+  background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem 1.2rem; margin-bottom: 1.5rem;
+}
+.wu-toolbar-row { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.8rem; }
+.wu-toolbar-row:last-child { margin-bottom: 0; }
+.wu-search-box {
+  flex: 1; min-width: 200px; display: flex; align-items: center; gap: 0.5rem;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 0.5rem 0.8rem; transition: border-color 0.2s;
+}
+.wu-search-box:focus-within { border-color: var(--red); }
+.wu-search-box svg { width: 16px; height: 16px; color: var(--fg-dim); flex-shrink: 0; }
+.wu-search-box input {
+  border: none; background: none; color: var(--white); font-family: var(--font-body);
+  font-size: 0.85rem; width: 100%; outline: none;
+}
+.wu-search-box input::placeholder { color: var(--fg-dim); }
+.wu-select-wrap {
+  position: relative; display: inline-flex; align-items: center;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 0 0.8rem; height: 36px; font-family: var(--font-mono); font-size: 0.72rem;
+}
+.wu-select-wrap .wu-select-label { color: var(--fg-dim); margin-right: 0.4rem; white-space: nowrap; }
+.wu-select-wrap select {
+  background: none; border: none; color: var(--white); font-family: var(--font-mono);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer; outline: none;
+  -webkit-appearance: none; appearance: none; padding-right: 1.2rem;
+}
+.wu-select-wrap::after { content: '▾'; position: absolute; right: 0.6rem; color: var(--fg-dim); pointer-events: none; font-size: 0.65rem; }
+.wu-seg { display: flex; gap: 2px; background: var(--border); border-radius: var(--radius-sm); overflow: hidden; border: none; padding: 0; margin: 0; }
+.wu-seg label {
+  font-family: var(--font-mono); font-size: 0.68rem; padding: 0.45em 0.9em;
+  cursor: pointer; background: var(--bg); color: var(--fg-muted); transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.3em; white-space: nowrap;
+}
+.wu-seg label:has(input:checked) { background: var(--red); color: #fff; }
+.wu-seg input { display: none; }
+.wu-diff-stars { letter-spacing: 1px; }
+.wu-diff-stars .on { color: var(--red-soft); }
+.wu-diff-stars .off { color: var(--fg-dim); }
+
+.wu-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.wu-chip {
+  font-family: var(--font-mono); font-size: 0.68rem; padding: 0.4em 0.9em;
+  border: 1px solid var(--border); border-radius: 100px; cursor: pointer;
+  background: var(--bg); color: var(--fg-muted); transition: all 0.25s;
+  display: inline-flex; align-items: center; gap: 0.4em;
+}
+.wu-chip:hover { border-color: var(--fg-muted); color: var(--white); }
+.wu-chip.active { border-color: var(--red); color: var(--white); background: var(--red-glow); }
+.wu-chip-icon { width: 14px; height: 14px; }
+.wu-chip-n { font-size: 0.6rem; opacity: 0.6; }
+
+.wu-results-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+.wu-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); }
+.wu-tab {
+  font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+  color: var(--fg-muted); padding: 0.6em 1.2em; cursor: pointer; transition: all 0.2s;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+}
+.wu-tab:hover { color: var(--white); }
+.wu-tab.active { color: var(--white); border-bottom-color: var(--red); }
+.wu-tab .wu-tab-n { font-size: 0.7rem; background: var(--bg-card); border: 1px solid var(--border); padding: 0.1em 0.5em; border-radius: 100px; margin-left: 0.4em; }
+.wu-count { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-muted); }
+.wu-count strong { color: var(--white); }
+
+.wu-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  list-style: none; padding: 0; margin: 0;
+}
+@media (max-width: 900px) { .wu-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 550px) { .wu-grid { grid-template-columns: 1fr; } }
+
+.wu-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; transition: all 0.35s cubic-bezier(0.19,1,0.22,1); cursor: pointer;
+}
+.wu-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 0 20px var(--red-glow); }
+.wu-card-cover {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+  background: var(--bg-elevated);
+}
+.wu-card-cover-placeholder {
+  width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg) 100%);
+  font-family: var(--font-mono); font-size: 2rem; color: var(--fg-dim);
+}
+.wu-card-body { padding: 1.2rem 1.4rem 1.4rem; }
+.wu-card-tags { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
+.wu-card-cat {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--red-soft); display: inline-flex;
+  align-items: center; gap: 0.3em;
+}
+.wu-card-cat::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--red); }
+.wu-card-diff { font-family: var(--font-mono); font-size: 0.6rem; color: var(--fg-dim); text-transform: uppercase; }
+.wu-card h3 {
+  font-family: var(--font-display); font-size: 1.08rem; font-weight: 700;
+  color: var(--white); margin: 0 0 0.4rem; line-height: 1.3;
+}
+.wu-card-summary { font-size: 0.82rem; color: var(--fg-muted); line-height: 1.5; margin: 0 0 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.wu-card-foot { display: flex; justify-content: space-between; align-items: flex-end; }
+.wu-card-author { display: flex; align-items: center; gap: 0.5rem; }
+.wu-card-av {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--red-glow);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; color: var(--red-soft);
+  overflow: hidden; flex-shrink: 0;
+}
+.wu-card-av img { width: 100%; height: 100%; object-fit: cover; }
+.wu-card-byline { font-family: var(--font-mono); font-size: 0.65rem; color: var(--fg-muted); }
+.wu-card-byline strong { color: var(--fg); font-weight: 600; }
+.wu-card-ev { font-size: 0.6rem; color: var(--fg-dim); }
+.wu-card-end { text-align: right; }
+.wu-card-date { font-family: var(--font-mono); font-size: 0.6rem; color: var(--fg-dim); display: block; }
+.wu-card-read { font-family: var(--font-mono); font-size: 0.62rem; color: var(--red-soft); display: inline-flex; align-items: center; gap: 0.3em; margin-top: 0.3rem; }
+.wu-card-read:hover { color: var(--white); }
+
+/* Event groups */
+.wu-event-group { margin-bottom: 2.5rem; }
+.wu-event-group-title {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+  color: var(--white); margin: 0 0 1rem; padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
 /* SCANLINE */
 .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.2; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.01) 2px, rgba(0,0,0,0.01) 4px); }
 
@@ -632,17 +767,64 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
 
 <!-- WRITEUPS LIST VIEW -->
 <div id="view-writeups-list" hidden>
-  <section class="section">
+  <header class="wu-phead">
     <div class="container">
-      <a class="back-link" onclick="showView('home')">← Back to home</a>
-      <div class="eyebrow">knowledge.base</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
-        <h2 class="section-title">Writeups</h2>
-        <button class="btn btn-red" id="newWriteupBtn" onclick="showView('editor')" hidden data-en="New writeup" data-fr="Nouveau writeup">New writeup</button>
-      </div>
-      <div id="writeupsList"></div>
+      <p class="hv-eyebrow">CTF knowledge base</p>
+      <h1>Writeups</h1>
+      <p class="hv-lead" data-en="Solutions, observations, and practical notes from the team's competitive work." data-fr="Solutions, observations et notes pratiques du travail competitif de l'equipe.">Solutions, observations, and practical notes from the team's competitive work.</p>
+      <p class="wu-sum" id="wuSummary"></p>
     </div>
-  </section>
+  </header>
+
+  <div class="container">
+    <!-- TOOLBAR -->
+    <div class="wu-toolbar">
+      <div class="wu-toolbar-row">
+        <div class="wu-search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
+          <input type="search" id="wuSearch" placeholder="Search titles, summaries, authors" autocomplete="off">
+        </div>
+        <div class="wu-select-wrap">
+          <span class="wu-select-label">Event</span>
+          <select id="wuEventFilter"><option value="">All events</option></select>
+        </div>
+        <fieldset class="wu-seg" id="wuDiffFilter">
+          <label><input type="radio" name="wuDiff" value="" checked><span>All</span></label>
+          <label><input type="radio" name="wuDiff" value="easy"><span><span class="wu-diff-stars"><span class="on">★</span><span class="off">★★</span></span> Easy</span></label>
+          <label><input type="radio" name="wuDiff" value="medium"><span><span class="wu-diff-stars"><span class="on">★★</span><span class="off">★</span></span> Medium</span></label>
+          <label><input type="radio" name="wuDiff" value="hard"><span><span class="wu-diff-stars"><span class="on">★★★</span></span> Hard</span></label>
+        </fieldset>
+      </div>
+      <div class="wu-toolbar-row">
+        <div class="wu-chips" id="wuCatChips"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS BAR -->
+    <div class="wu-results-bar">
+      <div style="display:flex;align-items:center;gap:0">
+        <div class="wu-tabs">
+          <span class="wu-tab active" data-group="" onclick="setGroupMode('')" data-en="All writeups" data-fr="Tous les writeups">All writeups</span>
+          <span class="wu-tab" data-group="event" onclick="setGroupMode('event')">By event <span class="wu-tab-n" id="wuEventCount"></span></span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <p class="wu-count" id="wuCount"></p>
+        <div class="wu-select-wrap">
+          <span class="wu-select-label">Sort</span>
+          <select id="wuSort">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
+        <button class="btn btn-red" id="newWriteupBtn" onclick="showView('editor')" hidden data-en="+ New writeup" data-fr="+ Nouveau writeup" style="font-size:0.65rem;padding:0.5em 1em">+ New writeup</button>
+      </div>
+    </div>
+
+    <!-- WRITEUP CARDS -->
+    <div id="writeupsList"></div>
+  </div>
+  <div style="height:4rem"></div>
 </div>
 
 <!-- WRITEUP VIEWER -->
@@ -658,9 +840,29 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
       <div class="eyebrow" data-en="Write" data-fr="Ecrire">Write</div>
       <h2 class="section-title" id="editorTitle" data-en="New Writeup" data-fr="Nouveau writeup">New Writeup</h2>
       <div class="form-group"><label>Title</label><input type="text" id="edTitle" placeholder="HackerLab 2026 : Web Challenge XSS"></div>
+      <div class="form-group"><label data-en="Summary (short)" data-fr="Resume (court)">Summary (short)</label><input type="text" id="edSummary" placeholder="One-line summary of the challenge and approach"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem">
+        <div class="form-group">
+          <label data-en="Category" data-fr="Categorie">Category</label>
+          <select id="edCat"><option value="web">Web</option><option value="pwn">Pwn</option><option value="reverse">Reverse</option><option value="crypto">Crypto</option><option value="forensics">Forensics</option><option value="osint">OSINT</option><option value="misc" selected>Misc</option></select>
+        </div>
+        <div class="form-group">
+          <label data-en="Difficulty" data-fr="Difficulte">Difficulty</label>
+          <select id="edDiff"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
+        </div>
+        <div class="form-group">
+          <label>Event</label>
+          <input type="text" id="edEvent" placeholder="HackerLab 2026" list="eventSuggestions">
+          <datalist id="eventSuggestions">
+            <option value="HackerLab 2026">
+            <option value="Epihack 2026">
+            <option value="HackerLab Qualifs 2026">
+          </datalist>
+        </div>
+      </div>
       <div class="form-group">
-        <label data-en="Category" data-fr="Categorie">Category</label>
-        <select id="edCat"><option value="web">Web</option><option value="pwn">Pwn</option><option value="reverse">Reverse</option><option value="crypto">Crypto</option><option value="forensics">Forensics</option><option value="osint">OSINT</option><option value="misc" selected>Misc</option></select>
+        <label data-en="Cover image URL (optional)" data-fr="Image de couverture URL (optionnel)">Cover image URL (optional)</label>
+        <input type="text" id="edCover" placeholder="https://... or upload via button below">
       </div>
       <div class="form-group">
         <label data-en="Content (Markdown)" data-fr="Contenu (Markdown)">Content (Markdown)</label>
@@ -958,6 +1160,10 @@ function showView(name) {
     document.getElementById('edTitle').value = '';
     document.getElementById('edContent').value = '';
     document.getElementById('edCat').value = 'misc';
+    document.getElementById('edDiff').value = 'medium';
+    document.getElementById('edEvent').value = '';
+    document.getElementById('edSummary').value = '';
+    document.getElementById('edCover').value = '';
     document.getElementById('edId').value = '';
     document.getElementById('edError').textContent = '';
   }
@@ -1042,20 +1248,158 @@ function md(text) {
 }
 function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').substring(0, 80); }
 
-// WRITEUPS CRUD
+// WRITEUPS DATA + FILTERING
+let allWriteups = [];
+let wuGroupMode = '';
+const catIcons = { web: '🌐', pwn: '💻', reverse: '⇄', crypto: '🔑', forensics: '🔍', osint: '🎯', misc: '⊞' };
+
+function diffStars(d) {
+  const n = d === 'easy' ? 1 : d === 'hard' ? 3 : 2;
+  return '<span class="on">' + '★'.repeat(n) + '</span>' + (n < 3 ? '<span class="off">' + '★'.repeat(3 - n) + '</span>' : '');
+}
+
+function renderWuCard(w) {
+  const author = w.profiles?.pseudo || 'Anonymous';
+  const initial = author.charAt(0).toUpperCase();
+  const date = new Date(w.created_at);
+  const dateStr = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const cover = w.cover_image
+    ? `<img class="wu-card-cover" src="${esc(w.cover_image)}" alt="" loading="lazy">`
+    : `<div class="wu-card-cover-placeholder">${catIcons[w.category] || '⊞'}</div>`;
+  const summary = w.summary || w.content.substring(0, 120);
+  return `<div class="wu-card" onclick="viewWriteup(${w.id})">
+    ${cover}
+    <div class="wu-card-body">
+      <div class="wu-card-tags">
+        <span class="wu-card-cat">${esc(w.category)}</span>
+        <span class="wu-card-diff"><span class="wu-diff-stars">${diffStars(w.difficulty || 'medium')}</span> ${esc((w.difficulty || 'medium').charAt(0).toUpperCase() + (w.difficulty || 'medium').slice(1))}</span>
+      </div>
+      <h3>${esc(w.title)}</h3>
+      <p class="wu-card-summary">${esc(summary)}</p>
+      <div class="wu-card-foot">
+        <div class="wu-card-author">
+          <div class="wu-card-av">${initial}</div>
+          <div>
+            <div class="wu-card-byline"><strong>${esc(author)}</strong>${w.event ? ' · <span class="wu-card-ev">' + esc(w.event) + '</span>' : ''}</div>
+          </div>
+        </div>
+        <div class="wu-card-end">
+          <span class="wu-card-date">${dateStr}</span>
+          <span class="wu-card-read">Read writeup ↗</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getFilteredWriteups() {
+  let filtered = [...allWriteups];
+  const q = (document.getElementById('wuSearch')?.value || '').toLowerCase().trim();
+  if (q) {
+    filtered = filtered.filter(w => {
+      const haystack = (w.title + ' ' + (w.summary || '') + ' ' + (w.profiles?.pseudo || '') + ' ' + (w.event || '') + ' ' + w.category).toLowerCase();
+      return haystack.includes(q);
+    });
+  }
+  const ev = document.getElementById('wuEventFilter')?.value || '';
+  if (ev) filtered = filtered.filter(w => (w.event || '') === ev);
+  const diff = document.querySelector('input[name="wuDiff"]:checked')?.value || '';
+  if (diff) filtered = filtered.filter(w => (w.difficulty || 'medium') === diff);
+  const cat = document.querySelector('.wu-chip.active')?.dataset.cat || '';
+  if (cat) filtered = filtered.filter(w => w.category === cat);
+  const sort = document.getElementById('wuSort')?.value || 'newest';
+  filtered.sort((a, b) => sort === 'oldest'
+    ? new Date(a.created_at) - new Date(b.created_at)
+    : new Date(b.created_at) - new Date(a.created_at));
+  return filtered;
+}
+
+function renderWriteupsList() {
+  const filtered = getFilteredWriteups();
+  const c = document.getElementById('writeupsList');
+  document.getElementById('wuCount').innerHTML = '<strong>' + filtered.length + '</strong> writeup' + (filtered.length !== 1 ? 's' : '');
+
+  if (!filtered.length) {
+    c.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? '// Aucun writeup ne correspond' : '// No matching writeups') + '</div>';
+    return;
+  }
+
+  if (wuGroupMode === 'event') {
+    const groups = {};
+    filtered.forEach(w => { const ev = w.event || 'Uncategorized'; (groups[ev] = groups[ev] || []).push(w); });
+    c.innerHTML = Object.entries(groups).map(([ev, ws]) =>
+      `<div class="wu-event-group"><h3 class="wu-event-group-title">${esc(ev)} <span style="font-weight:400;font-size:0.8rem;color:var(--fg-muted)">(${ws.length})</span></h3><div class="wu-grid">${ws.map(renderWuCard).join('')}</div></div>`
+    ).join('');
+  } else {
+    c.innerHTML = '<div class="wu-grid">' + filtered.map(renderWuCard).join('') + '</div>';
+  }
+}
+
+function buildWriteupsUI() {
+  const cats = {};
+  const events = new Set();
+  allWriteups.forEach(w => {
+    cats[w.category] = (cats[w.category] || 0) + 1;
+    if (w.event) events.add(w.event);
+  });
+
+  document.getElementById('wuSummary').innerHTML =
+    '<span><b>' + allWriteups.length + '</b> writeups</span>' +
+    '<span><b>' + Object.keys(cats).length + '</b> categories</span>' +
+    '<span><b>' + events.size + '</b> events</span>';
+
+  const chipsEl = document.getElementById('wuCatChips');
+  chipsEl.innerHTML = '<span class="wu-chip active" data-cat="" onclick="filterCat(this)">All <span class="wu-chip-n">' + allWriteups.length + '</span></span>' +
+    Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([cat, n]) =>
+      `<span class="wu-chip" data-cat="${cat}" onclick="filterCat(this)">${(catIcons[cat] || '')} ${cat.charAt(0).toUpperCase() + cat.slice(1)} <span class="wu-chip-n">${n}</span></span>`
+    ).join('');
+
+  const evSelect = document.getElementById('wuEventFilter');
+  evSelect.innerHTML = '<option value="">All events (' + allWriteups.length + ')</option>' +
+    [...events].sort().map(ev => {
+      const n = allWriteups.filter(w => w.event === ev).length;
+      return `<option value="${esc(ev)}">${esc(ev)} (${n})</option>`;
+    }).join('');
+
+  document.getElementById('wuEventCount').textContent = events.size;
+  renderWriteupsList();
+}
+
+function filterCat(el) {
+  document.querySelectorAll('.wu-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderWriteupsList();
+}
+function setGroupMode(mode) {
+  wuGroupMode = mode;
+  document.querySelectorAll('.wu-tab').forEach(t => t.classList.toggle('active', t.dataset.group === mode));
+  renderWriteupsList();
+}
+
+// Wire up filter events
+document.getElementById('wuSearch')?.addEventListener('input', renderWriteupsList);
+document.getElementById('wuEventFilter')?.addEventListener('change', renderWriteupsList);
+document.getElementById('wuSort')?.addEventListener('change', renderWriteupsList);
+document.querySelectorAll('input[name="wuDiff"]').forEach(r => r.addEventListener('change', renderWriteupsList));
+
 async function loadWriteups() {
   const c = document.getElementById('writeupsList');
   c.innerHTML = '<div class="writeups-empty">Loading...</div>';
   const { data, error } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false });
-  if (error || !data?.length) { c.innerHTML = '<div class="writeups-empty">' + (currentLang === 'fr' ? '// Aucun writeup pour le moment' : '// No writeups yet') + '</div>'; return; }
-  c.innerHTML = '<div class="writeup-grid">' + data.map(w => `<div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer"><div class="writeup-card-cat">${w.category}</div><h3>${esc(w.title)}</h3><div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div><div class="writeup-card-excerpt">${esc(w.content.substring(0, 150))}...</div></div>`).join('') + '</div>';
+  if (error || !data?.length) {
+    allWriteups = [];
+    buildWriteupsUI();
+    return;
+  }
+  allWriteups = data;
+  buildWriteupsUI();
 }
 
 async function loadHomeWriteups() {
   const c = document.getElementById('homeWriteups');
   const { data } = await sb.from('writeups').select('*, profiles(pseudo)').eq('published', true).order('created_at', { ascending: false }).limit(3);
   if (!data?.length) { c.innerHTML = '<div class="writeups-empty" data-en="// Coming soon" data-fr="// Bientot disponible">// Coming soon</div>'; if (currentLang !== 'en') setLang(currentLang); return; }
-  c.innerHTML = '<div class="writeup-grid">' + data.map(w => `<div class="writeup-card" onclick="viewWriteup(${w.id})" style="cursor:pointer"><div class="writeup-card-cat">${w.category}</div><h3>${esc(w.title)}</h3><div class="writeup-card-meta">${w.profiles?.pseudo || 'Anonymous'} &middot; ${new Date(w.created_at).toLocaleDateString()}</div></div>`).join('') + '</div>';
+  c.innerHTML = '<div class="wu-grid">' + data.map(renderWuCard).join('') + '</div>';
 }
 
 async function viewWriteup(id) {
@@ -1087,7 +1431,11 @@ async function saveWriteup(publish) {
   if (!title || !content) { err.textContent = 'Title and content are required'; return; }
   err.textContent = '';
   const slug = slugify(title) + '-' + Date.now().toString(36);
-  const row = { title, content, category, slug, published: publish, author_id: currentUser.id, updated_at: new Date().toISOString() };
+  const difficulty = document.getElementById('edDiff').value;
+  const event = document.getElementById('edEvent').value.trim();
+  const summary = document.getElementById('edSummary').value.trim();
+  const cover_image = document.getElementById('edCover').value.trim();
+  const row = { title, content, category, slug, published: publish, author_id: currentUser.id, updated_at: new Date().toISOString(), difficulty, event, summary, cover_image };
   if (id) { delete row.slug; delete row.author_id; const { error } = await sb.from('writeups').update(row).eq('id', parseInt(id)); if (error) { err.textContent = error.message; return; } }
   else { const { error } = await sb.from('writeups').insert(row); if (error) { err.textContent = error.message; return; } }
   showView('dashboard');
@@ -1100,6 +1448,10 @@ async function editWriteup(id) {
   document.getElementById('edTitle').value = data.title;
   document.getElementById('edContent').value = data.content;
   document.getElementById('edCat').value = data.category;
+  document.getElementById('edDiff').value = data.difficulty || 'medium';
+  document.getElementById('edEvent').value = data.event || '';
+  document.getElementById('edSummary').value = data.summary || '';
+  document.getElementById('edCover').value = data.cover_image || '';
   document.getElementById('edError').textContent = '';
   showView('editor');
 }
