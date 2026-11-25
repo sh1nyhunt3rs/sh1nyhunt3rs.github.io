@@ -216,6 +216,12 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
 .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--red); }
 .form-group textarea { min-height: 200px; resize: vertical; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7; }
 .form-error { font-family: var(--font-mono); font-size: 0.7rem; color: var(--red); margin-top: 0.3rem; }
+.editor-toolbar { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
+.editor-toolbar button { font-family: var(--font-mono); font-size: 0.65rem; padding: 0.3em 0.7em; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--fg-muted); border-radius: 3px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3em; }
+.editor-toolbar button:hover { border-color: var(--fg-muted); color: var(--white); }
+.editor-toolbar button.uploading { opacity: 0.5; pointer-events: none; }
+.editor-drop-zone { position: relative; }
+.editor-drop-zone.drag-over textarea { border-color: var(--red); background: var(--red-glow); }
 .form-submit { width: 100%; padding: 0.7rem; background: var(--red); color: #fff; border: none; border-radius: 4px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem; }
 .form-submit:hover { background: #ff2a30; }
 .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -581,7 +587,13 @@ footer { border-top: 1px solid var(--border); padding: 3rem 0 2rem; }
       </div>
       <div class="form-group">
         <label data-en="Content (Markdown)" data-fr="Contenu (Markdown)">Content (Markdown)</label>
-        <textarea id="edContent" placeholder="## Challenge&#10;&#10;Description...&#10;&#10;## Solution&#10;&#10;```python&#10;# exploit code&#10;```"></textarea>
+        <div class="editor-toolbar">
+          <button type="button" onclick="triggerImageUpload()" id="imgUploadBtn">&#128247; <span data-en="Add image" data-fr="Ajouter image">Add image</span></button>
+          <input type="file" id="imgFileInput" accept="image/*" multiple hidden onchange="handleImageFiles(this.files)">
+        </div>
+        <div class="editor-drop-zone" id="editorDropZone">
+          <textarea id="edContent" placeholder="## Challenge&#10;&#10;Description...&#10;&#10;## Solution&#10;&#10;```python&#10;# exploit code&#10;```"></textarea>
+        </div>
       </div>
       <div class="form-error" id="edError"></div>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
@@ -779,7 +791,8 @@ function md(text) {
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>');
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;margin:0.5em 0">');
   h = h.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => '<pre><code>' + code.trim() + '</code></pre>');
   h = h.split(/\n\n+/).map(p => {
     p = p.trim();
@@ -918,6 +931,53 @@ async function deleteWriteup(id) {
 }
 
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// IMAGE UPLOAD
+const STORAGE_URL = 'https://mhyckmtdqwrfhddtoyok.supabase.co/storage/v1/object/public/writeup-images/';
+
+function triggerImageUpload() { document.getElementById('imgFileInput').click(); }
+
+async function uploadImage(file) {
+  if (!currentUser) return null;
+  if (!file.type.startsWith('image/')) return null;
+  if (file.size > 5 * 1024 * 1024) { alert('Image too large (max 5MB)'); return null; }
+  const ext = file.name.split('.').pop().toLowerCase();
+  const name = currentUser.id.substring(0, 8) + '-' + Date.now().toString(36) + '.' + ext;
+  const { error } = await sb.storage.from('writeup-images').upload(name, file, { contentType: file.type, upsert: false });
+  if (error) { console.error('Upload error:', error); return null; }
+  return STORAGE_URL + name;
+}
+
+async function handleImageFiles(files) {
+  const btn = document.getElementById('imgUploadBtn');
+  btn.classList.add('uploading');
+  const ta = document.getElementById('edContent');
+  for (const file of files) {
+    const url = await uploadImage(file);
+    if (url) {
+      const tag = `![${file.name}](${url})`;
+      const pos = ta.selectionStart;
+      ta.value = ta.value.substring(0, pos) + '\n' + tag + '\n' + ta.value.substring(pos);
+    }
+  }
+  btn.classList.remove('uploading');
+}
+
+(function() {
+  const zone = document.getElementById('editorDropZone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+    if (files.length) handleImageFiles(files);
+  });
+  document.getElementById('edContent').addEventListener('paste', e => {
+    const files = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/'));
+    if (files.length) { e.preventDefault(); handleImageFiles(files); }
+  });
+})();
 
 // INIT
 loadHomeWriteups();
