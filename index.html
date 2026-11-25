@@ -1363,7 +1363,7 @@ function slugify(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').r
 // WRITEUPS DATA + FILTERING
 let allWriteups = [];
 let wuGroupMode = '';
-const catIcons = { web: '🌐', pwn: '💻', reverse: '⇄', crypto: '🔑', forensics: '🔍', osint: '🎯', misc: '⊞' };
+const catIcons = { web: '', pwn: '', reverse: '', crypto: '', forensics: '', osint: '', misc: '' };
 
 function diffStars(d) {
   const n = d === 'easy' ? 1 : d === 'hard' ? 3 : 2;
